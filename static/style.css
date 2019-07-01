@@ -1,0 +1,34 @@
+body {
+	background-color: #383840
+}
+
+span {
+	color: #a5acbd;
+}
+
+h1 {
+	color: #a5acbd;
+	font-size: 26px;
+	margin: 0;
+}
+
+h3 {
+	color: #a5acbd;
+	font-size: 16px;
+	margin: 0;
+}
+
+.status {
+	display: grid;
+	grid-template-columns: 200px auto 200px;
+	padding: 10px 10px 0 10px;
+	align-items: center;
+}
+
+.patch {
+	display: grid;
+	width: 400px;
+	grid-template-columns: 100px auto 50px;
+	grid-template-areas: 'dimmer level reset';
+	align-items: 'center';
+}

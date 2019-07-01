@@ -1,0 +1,26 @@
+{
+  "name": "luminesence",
+  "version": "1.0.0",
+  "description": "Web based DMX controller",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "James Sundra",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.0.3",
+    "file-loader": "^4.0.0",
+    "html-loader": "^0.5.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5"
+  },
+  "dependencies": {
+    "react-draggable-tab": "^0.10.1"
+  }
+}
