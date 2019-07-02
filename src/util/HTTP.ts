@@ -1,8 +1,9 @@
-module.exports = {
-	get: function(url) {
+export module HTTP {
+
+	export function Get<T>(url: string): Promise<T> {
 		return new Promise((resolve, reject) => {
 			const req = new XMLHttpRequest();
-			
+
 			req.onreadystatechange = () => {
 				if (req.readyState !== 4) return;
 
@@ -17,27 +18,27 @@ module.exports = {
 			};
 			req.open('GET', url);
 			req.send();
-		})
-	},
-	
-	post: function(url) {
+		});
+	}
+
+	export function Post<T>(url: string, payload: any): Promise<T> {
 		return new Promise((resolve, reject) => {
 			const req = new XMLHttpRequest();
-			
-			req.onreadystatechange = () => {
-				if (req.readyState !== 4) return;
 
-				if (req.status >= 200 && req.status < 300) {
-					resolve(req.response);
-				} else {
-					reject({
-						status: req.status,
-						message: req.statusText
-					});
-				}
+			req.onreadystatechange = () => {
+			  if (req.readyState !== 4) return;
+
+			  if (req.status >= 200 && req.status < 300) {
+				resolve(req.response);
+			  } else {
+				reject({
+				  status: req.status,
+				  message: req.statusText
+				});
+			  }
 			};
 			req.open('POST', url);
 			req.send();
-		})
-	}
+		});
+  	}
 }

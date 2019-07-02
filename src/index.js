@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import StatusBar from "components/container/StatusBar.jsx";
+import StatusBar from "components/Screens/StatusBar.jsx";
 import TabGroup from "components/container/TabGroup.jsx";
 
 const page = (

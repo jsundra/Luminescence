@@ -28,7 +28,7 @@ h3 {
 .patch {
 	display: grid;
 	width: 400px;
-	grid-template-columns: 100px auto 50px;
+	grid-template-columns: 100px 250px 250px;
 	grid-template-areas: 'dimmer level reset';
 	align-items: 'center';
 }

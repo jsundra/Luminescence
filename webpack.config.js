@@ -1,25 +1,21 @@
-const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	mode: 'development',
+	entry: "./src/main.tsx",
 	resolve: {
 		modules: [
-			path.resolve(__dirname, 'node_modules'),
-			path.resolve(__dirname, './src/js')
-		]
+			'node_modules',
+			'./src'
+		],
+    extensions: ['.js', '.ts', '.tsx']
 	},
 	module: {
 		rules: [
 			{
-				test: /\.jsx?$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: ['@babel/preset-react']
-					}
-				}
+				test: /\.tsx?$/,
+        exclude: /node_modules/,
+				loader: 'ts-loader'
 			}
 		]
 	},
@@ -28,4 +24,4 @@ module.exports = {
 			{ from: 'static', to: '' }
 		])
 	]
-}
+};

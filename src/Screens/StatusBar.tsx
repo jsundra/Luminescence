@@ -1,23 +1,28 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import api from 'api';
+import * as React from 'react';
+import { Component } from 'react';
 
-class StatusBar extends Component {
-	constructor() {
-		super();
+import { API } from 'API';
+
+class State {
+	status: string
+}
+
+export default class StatusBar extends Component<any, State> {
+	constructor(props: any) {
+		super(props);
 
 		this.state = {
 			status: '...'
 		};
 
-		api
-			.status()
+		API
+			.Status()
 			.then((status) => {
 				this.setState({
 					status: status.connection ? "System ok" : "Adapter offline"
 				});
 			},
-			(status, message) => {
+			({ status: number, message: string}) => {
 				this.setState({
 					status: 'Unknown error'
 				});
@@ -34,5 +39,3 @@ class StatusBar extends Component {
 		);
 	}
 }
-
-export default StatusBar;
