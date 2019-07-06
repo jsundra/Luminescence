@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 const commonConfig = {
 	mode: 'development',
@@ -23,14 +24,15 @@ const commonConfig = {
 
 const serverConfig = {
 	target: 'node',
-	entry: './src/server.ts',
+	entry: './src/Server/main.ts',
 	output: {
 		path: path.resolve(__dirname, './dist/node'),
 		filename: 'server.js'
 	},
 	node: {
-		__dirname: true
-	}
+		__dirname: false
+	},
+	externals: [nodeExternals()]
 };
 
 const clientConfig = {
@@ -38,7 +40,7 @@ const clientConfig = {
 	entry: './src/web.tsx',
 	output: {
 		path: path.resolve(__dirname, './dist/www'),
-		filename: 'web.js'
+		filename: 'main.js'
 	},
 
     plugins: [

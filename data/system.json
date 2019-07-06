@@ -12,7 +12,6 @@
         }
     ],
     "dmx": {
-        "idleSendRate": 1000,
-        "activeSendRate": 30
+        "sendRate": 30
     }
 }
