@@ -11,8 +11,7 @@
             "Common/*": [
                 "./src/Common/*"
             ]
-        },
-        "typeRoots": [ "@types" ]
+        }
     },
     "include": [
         "./src/Common"
