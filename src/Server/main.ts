@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as express from 'express';
 import * as morgan from 'morgan';
 
-import 'Common/Util/ArrayUtil';
 import './Config/Config';
 
 import Luminescence from './Luminescence';

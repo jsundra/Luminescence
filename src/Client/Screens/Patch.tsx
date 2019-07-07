@@ -29,8 +29,8 @@ export default class Patch extends Component<any, State> {
 			.GetDimmers()
 			.then(data => {
 				const names = this.state.names;
-				for (const key in data) {
-					names[key] = data[key].name;
+				for (const key in data.values) {
+					names[key] = data.names[key];
 				}
 				this.setState({names});
 			}, reason => {

@@ -16,7 +16,8 @@ export default class DMXController {
 
     private _intervalId: Timeout;
 
-    public constructor(config: SystemConfig) {
+    public constructor(config: SystemConfig, data: BoardData) {
+        this._data = data;
         this.dimmers = new DimmersModule(this._data);
 
         this._intervalId = setInterval(this.update.bind(this), config.dmx.sendRate)

@@ -95,6 +95,4 @@ function deepCopy(orig, replace) {
 const serverBlob = deepCopy(commonConfig, serverConfig);
 const clientBlob = deepCopy(commonConfig, clientConfig);
 
-console.log(serverBlob);
-
 module.exports = [serverBlob, clientBlob];

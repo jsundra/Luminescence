@@ -10,6 +10,7 @@ import DMXAdapter from './DMX/Adapters/DMXAdapter';
 import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
 import { OutboundPayload } from './Payloads/PayloadBasee';
 import { StatusPayload } from './Payloads/Out/Status';
+import FileSync from './Persistent/FileSync';
 
 export default class Luminescence {
 
@@ -24,7 +25,15 @@ export default class Luminescence {
         const config = new Config();
         config.loadFromFilesystem();
 
-        this._controller = new DMXController(config.system);
+        const saveSrc = './data/board.json';
+        const sync = new FileSync();
+        const data = sync.loadFromDisk(saveSrc);
+
+        data.addChangeListener(() => {
+            sync.saveToDisk(saveSrc, data);
+        });
+
+        this._controller = new DMXController(config.system, data);
 
         this.findAdapter();
         this.watchUSB();

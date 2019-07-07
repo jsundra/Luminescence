@@ -19,7 +19,7 @@ export module API {
         return HTTP.Post(url, null);
 	}
 
-	export function GetDimmers(): Promise<{[key: string]: DimmerData}> {
+	export function GetDimmers(): Promise<DimmerData> {
 		return HTTP.Get('/dimmer/');
 	}
 }
