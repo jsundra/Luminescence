@@ -7,7 +7,7 @@ const page = (
   <div>
     <StatusBar/>
   <hr/>
-  <ScreenManager/>
+    <ScreenManager/>
   </div>
 );
 

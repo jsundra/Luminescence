@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { API } from '../API';
+import { Component } from 'react';
 
 class State {
 	maxAddr: number;
@@ -8,7 +8,7 @@ class State {
 	names: {[key: string]: string};
 }
 
-export default class Patch extends Component<any, State> {
+export default class PatchWindow extends Component<{}, State> {
 
 	private textInput: any;
 	private slider: any;
