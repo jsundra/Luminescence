@@ -1,17 +1,5 @@
 {
-    "adapters" : [
-        {
-            "name": "Enttec Open DMX USB",
-            "vendorId": 1027,
-            "productId": 24577
-        },
-        {
-            "name": "uDMX",
-            "vendorId": 5824,
-            "productId": 1500
-        }
-    ],
     "dmx": {
-        "sendRate": 30
+        "sendRate": 35
     }
 }

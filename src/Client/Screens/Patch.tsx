@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { API } from 'API';
+import { API } from '../API';
 
 class State {
 	maxAddr: number;

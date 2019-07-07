@@ -5,6 +5,11 @@ cmd_SetSingleChannel = 1
 cmd_SetChannelRange = 2
 bmRequestType = usb.util.CTRL_TYPE_VENDOR | usb.util.CTRL_RECIPIENT_DEVICE | usb.util.CTRL_OUT
 
+print (usb.util.CTRL_TYPE_VENDOR)
+print (usb.util.CTRL_RECIPIENT_DEVICE)
+print (usb.util.CTRL_OUT)
+print (bmRequestType);
+
 class DMX:
 	def __init__(self):
 		self.__conn = usb.core.find(idProduct=0x05dc)

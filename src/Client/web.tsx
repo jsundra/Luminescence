@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import StatusBar from 'Screens/StatusBar';
-import ScreenManager from 'ScreenManager';
+import StatusBar from './Screens/StatusBar';
+import ScreenManager from './ScreenManager';
 
 const page = (
   <div>

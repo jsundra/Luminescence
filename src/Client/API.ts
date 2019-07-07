@@ -1,15 +1,8 @@
-import { HTTP } from './util/HTTP';
-
-export type StatusResponse = {
-	connection: boolean
-};
-
-export type DimmerData = {
-	name: string;
-}
+import { HTTP } from './Util/HTTP';
+import { DimmerData } from 'Common/BoardData';
 
 export module API {
-	export function Status(): Promise<StatusResponse> {
+	export function Status(): Promise<any> {
 		return HTTP.Get('/status');
 	}
 
