@@ -1,5 +1,6 @@
 import BoardModule from './BoardModule';
-import { DimmerData } from '../../Common/BoardData';
+import { DimmerData } from 'Common/BoardData';
+
 
 export default class DimmersModule extends BoardModule {
 

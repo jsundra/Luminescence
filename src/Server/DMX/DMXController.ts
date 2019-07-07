@@ -1,7 +1,7 @@
 import DMXAdapter from './Adapters/DMXAdapter';
 import Timeout = NodeJS.Timeout;
 import SystemConfig from '../Config/SystemConfig';
-import { BoardData, DimmerData } from '../../Common/BoardData';
+import { BoardData, DimmerData } from 'Common/BoardData';
 import DimmersModule from './DimmersModule';
 
 export default class DMXController {

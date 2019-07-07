@@ -1,4 +1,4 @@
-import { BoardData } from '../../Common/BoardData';
+import { BoardData } from 'Common/BoardData';
 
 export default abstract class BoardModule {
 

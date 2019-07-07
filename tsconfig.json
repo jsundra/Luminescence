@@ -5,7 +5,14 @@
         "noImplicitAny": true,
         "module": "commonjs",
         "target": "es6",
-        "jsx": "react"
+        "jsx": "react",
+        "baseUrl": "./",
+        "paths": {
+            "Common/*": [
+                "./src/Common/*"
+            ]
+        },
+        "typeRoots": [ "@types" ]
     },
     "include": [
         "./src/Common"
