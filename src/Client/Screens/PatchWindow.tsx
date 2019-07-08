@@ -25,17 +25,17 @@ export default class PatchWindow extends Component<{}, State> {
 		this.textInput = {};
 		this.slider = {};
 
-		API
-			.GetDimmers()
-			.then(data => {
-				const names = this.state.names;
-				for (const key in data.values) {
-					names[key] = data.names[key];
-				}
-				this.setState({names});
-			}, reason => {
-				console.error('Error getting dimmer data: ' + reason);
-			})
+		// API
+		// 	.GetDimmers()
+		// 	.then(data => {
+		// 		const names = this.state.names;
+		// 		for (const key in data.values) {
+		// 			names[key] = data.names[key];
+		// 		}
+		// 		this.setState({names});
+		// 	}, reason => {
+		// 		console.error('Error getting dimmer data: ' + reason);
+		// 	})
 	}
 
 	onSetDimmer(addr: number, level: number): void {

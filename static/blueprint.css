@@ -3725,7 +3725,7 @@ form{
   .bp3-running-text table th, table.bp3-html-table th{
     color:#182026;
     font-weight:600; }
-  
+
   .bp3-running-text table td,
   table.bp3-html-table td{
     color:#182026; }
@@ -6588,14 +6588,16 @@ span.bp3-popover-target{
 .bp3-slider.bp3-vertical{
   width:40px;
   min-width:40px;
-  height:150px; }
+  height:150px;
+  }
   .bp3-slider.bp3-vertical .bp3-slider-track,
   .bp3-slider.bp3-vertical .bp3-slider-progress{
     top:0;
     bottom:0;
     left:5px;
-    width:6px;
-    height:auto; }
+    width: 6px;
+    height:auto;
+    }
   .bp3-slider.bp3-vertical .bp3-slider-progress{
     top:auto; }
   .bp3-slider.bp3-vertical .bp3-slider-label{
@@ -7853,4 +7855,3 @@ span.bp3-popover-target{
 
 .bp3-dark .bp3-tree-node.bp3-tree-node-selected > .bp3-tree-node-content{
   background-color:#137cbd; }
-/*# sourceMappingURL=blueprint.css.map */

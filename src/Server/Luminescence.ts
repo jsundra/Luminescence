@@ -11,11 +11,14 @@ import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
 import { OutboundPayload } from './Payloads/PayloadBasee';
 import { StatusPayload } from './Payloads/Out/Status';
 import FileSync from './Persistent/FileSync';
+import { BoardData } from '../Common/BoardData';
 
 export default class Luminescence {
 
     private _adapter: DMXAdapter;
     private _controller: DMXController;
+
+    private _data: BoardData;
 
     private readonly DMX_ADAPTERS = [
         EnttecOpenDMX, uDMX
@@ -27,38 +30,44 @@ export default class Luminescence {
 
         const saveSrc = './data/board.json';
         const sync = new FileSync();
-        const data = sync.loadFromDisk(saveSrc);
+        this._data = sync.loadFromDisk(saveSrc);
 
-        data.addChangeListener(() => {
-            sync.saveToDisk(saveSrc, data);
+        // TODO: Load from scene/user config
+        this._data.dimmers.count = 12;
+
+        this._data.addChangeListener(() => {
+            sync.saveToDisk(saveSrc, this._data);
         });
 
-        this._controller = new DMXController(config.system, data);
+        this._controller = new DMXController(config.system, this._data);
 
         this.findAdapter();
         this.watchUSB();
     }
 
     public configureEndpoints(express: Express): void {
-        express.route('/dimmer')
-            .post((req, res) => {
-                const payload = getOrThrow<SetDimmer>(['addr'], ['levels', 'aliases'], req.body);
-
-                if (payload.levels) this._controller.dimmers.setLevel(payload.addr, payload.levels);
-                if (payload.aliases) this._controller.dimmers.setAlias(payload.addr, payload.aliases);
-
-                res.sendStatus(204);
-            })
-            .get((req, res) => {
-
-            }
-        );
-
         express.route('/status')
             .get((req, res) => {
                 Luminescence.sendResponse<StatusPayload>(res, {
                     adapter: this._adapter ? this._adapter.constructor.name : null
                 });
+            }
+        );
+
+        express.route('/data')
+            .get((req, res) => {
+                res.json(this._data);
+            }
+        );
+
+        express.route('/dimmer')
+            .post((req, res) => {
+                const payload = getOrThrow<SetDimmer>(['addr'], ['levels', 'aliases'], req.body);
+
+                if (payload.levels) this._controller.dimmers.setLevel(payload.addr, Array.isArray(payload.levels) ? payload.levels : [payload.levels]);
+                if (payload.aliases) this._controller.dimmers.setAlias(payload.addr, Array.isArray(payload.aliases) ? payload.aliases : [payload.aliases]);
+
+                res.sendStatus(204);
             }
         );
     }

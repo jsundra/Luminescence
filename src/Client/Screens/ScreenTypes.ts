@@ -3,6 +3,5 @@ export type ScreenTypes =
     | 'Patch'
     | 'Stage'
     | 'Submasters'
-    | 'Park'
     | 'Channels'
 ;

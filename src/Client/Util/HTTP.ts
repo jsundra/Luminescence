@@ -38,7 +38,8 @@ export module HTTP {
 			  }
 			};
 			req.open('POST', url);
-			req.send();
+            req.setRequestHeader('Content-Type', 'application/json');
+			req.send(JSON.stringify(payload));
 		});
   	}
 }

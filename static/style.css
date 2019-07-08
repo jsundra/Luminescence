@@ -1,5 +1,5 @@
 body {
-	background-color: #383840
+	background-color: #202b33
 }
 
 span {
@@ -31,4 +31,50 @@ h3 {
 	grid-template-columns: 100px 250px 250px;
 	grid-template-areas: 'dimmer level reset';
 	align-items: center;
+}
+
+.mosaic-window-body {
+	padding: 15px;
+}
+
+
+
+.luminescence-controlgroup {
+	background-color: #30404d;
+	border: solid #30404d;
+	border-radius: 5px;
+	margin: 5px;
+}
+
+/* SingleChannel */
+.luminescence-singlechannel :first-child {
+	width: 100%;
+	text-align: center;
+}
+
+.luminescence-singlechannel {
+	max-width: 100px;
+	margin: 5px;
+}
+
+.luminescence-singlechannel .slider {
+	max-width: 100px;
+	margin: 15px 5px;
+}
+
+.luminescence-singlechannel .bp3-slider.bp3-vertical {
+	left: 50%;
+	transform: translate(-32%);
+}
+
+.luminescence-singlechannel input[type='text'] {
+	resize: none;
+	text-align: center;
+	width: 100%;
+}
+/* -------------------- */
+
+.flex {
+	 display: flex;
+	 flex-wrap: wrap;
 }

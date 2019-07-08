@@ -26,6 +26,7 @@ export class BoardData {
 }
 
 export class DimmerData {
+    count: number;
     values: number[] = [];
     names: string[] = [];
 }
