@@ -64,8 +64,8 @@ export default class Luminescence {
             .post((req, res) => {
                 const payload = getOrThrow<SetDimmer>(['addr'], ['levels', 'aliases'], req.body);
 
-                if (payload.levels) this._controller.dimmers.setLevel(payload.addr, Array.isArray(payload.levels) ? payload.levels : [payload.levels]);
-                if (payload.aliases) this._controller.dimmers.setAlias(payload.addr, Array.isArray(payload.aliases) ? payload.aliases : [payload.aliases]);
+                if (payload.levels !== undefined) this._controller.dimmers.setLevel(payload.addr, Array.isArray(payload.levels) ? payload.levels : [payload.levels]);
+                if (payload.aliases !== undefined) this._controller.dimmers.setAlias(payload.addr, Array.isArray(payload.aliases) ? payload.aliases : [payload.aliases]);
 
                 res.sendStatus(204);
             }

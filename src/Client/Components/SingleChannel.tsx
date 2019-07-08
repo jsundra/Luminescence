@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Slider, Text, TextArea } from '@blueprintjs/core';
+import { Slider } from '@blueprintjs/core';
 import { Component } from 'react';
 
 export type SingleChannelProps = {
@@ -7,7 +7,8 @@ export type SingleChannelProps = {
     sliderVal: number;
     sliderLabel?: string;
 
-    onSliderChange: (id:number, val:number) => void;
+    onSliderChange: (id: number, val: number) => void;
+    onNameChange: (id: number, name: string) => void;
 };
 
 export type SingleChannelState = {
@@ -45,7 +46,14 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                 <input className="bp3-input .modifier"
                        type="text"
                        dir="auto"
-                       defaultValue={this.props.sliderLabel} />
+                       defaultValue={this.props.sliderLabel}
+                       onBlur={(x) => {
+                           const newText = x.target.value;
+                           if (this.props.sliderLabel !== newText) {
+                               this.props.onNameChange(this.props.id, newText);
+                           }
+                       }}
+                />
             </div>
         );
     }

@@ -12,15 +12,16 @@ export module API {
 		return HTTP.Get('/data');
 	}
 
-	export function SetDimmer(addr: number, level: number = -1, name: string = ''): Promise<any> {
+	export function SetDimmer(addr: number, level: number = -1, name: string = null): Promise<any> {
 		let url = `/dimmer`;
 
 		// TODO: Type check this!
 		const payload = {
-			addr: addr,
-			levels: level,
-			aliases: name
+			addr: addr
 		};
+
+		if (level > -1) payload['levels'] = level;
+        if (name !== null) payload['aliases'] = name;
 
 		return HTTP.Post(url, payload);
 	}

@@ -46,9 +46,12 @@ export default class DimmersWindow extends Component<Props, State> {
                                 addr: id,
                                 value: val
                             });
-                            // const values = this.state.values;
-                            // values[id] = val;
-                            // this.setState({values});
+                        }}
+                        onNameChange={(id, name) => {
+                            this.context.msgBus.dispatch<UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {
+                                addr: id,
+                                alias: name
+                            });
                         }}
                     />
                 </div>
