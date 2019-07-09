@@ -74,7 +74,10 @@ export default class ScreenManager extends Component<{}, State> {
                 elm = <PatchWindow/>;
                 break;
             case 'Dimmers':
-                elm = <DimmersWindow dimmerData={this.state.boardData.dimmers}/>;
+                elm = <DimmersWindow
+                    dimmerData={this.state.boardData.dimmers}
+                    channelData={this.state.boardData.channels}
+                />;
                 break;
         }
         return (<MosaicWindow<T> title={type} path={path}>{elm}</MosaicWindow>);

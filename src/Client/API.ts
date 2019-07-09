@@ -2,6 +2,7 @@ import { HTTP } from './Util/HTTP';
 import { BoardData, DimmerData } from 'Common/BoardData';
 import MessageBus from './MessageBus';
 import { MSG_UPDATE_DIMMER, UPDATE_DIMMER } from './Messages';
+import { SetDimmerPayload } from '../Common/Networking/Payloads/Client';
 
 export module API {
 	export function Status(): Promise<any> {
@@ -16,12 +17,12 @@ export module API {
 		let url = `/dimmer`;
 
 		// TODO: Type check this!
-		const payload = {
+		const payload: SetDimmerPayload = {
 			addr: addr
 		};
 
-		if (level > -1) payload['levels'] = level;
-        if (name !== null) payload['aliases'] = name;
+		if (level > -1) payload.levels = [ level ];
+        if (name !== null) payload.aliases = [ name ];
 
 		return HTTP.Post(url, payload);
 	}

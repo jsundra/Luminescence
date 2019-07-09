@@ -78,3 +78,10 @@ h3 {
 	 display: flex;
 	 flex-wrap: wrap;
 }
+
+.parked {
+	background-color: #4d3b30;
+	border: solid #4d3b30;
+	border-radius: 5px;
+	margin: 5px;
+}

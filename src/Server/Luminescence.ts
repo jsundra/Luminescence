@@ -1,17 +1,16 @@
 import { Express, Response } from 'express';
 import DMXController from './DMX/DMXController';
-import { getOrThrow } from './Payloads/In/Payload';
-import { SetDimmer } from './Payloads/In/Dimmer';
+import { getOrThrow } from 'Common/Networking/Payloads/Payload';
 import Config from './Config/Config';
 
 import * as usb from 'usb';
 import uDMX from './DMX/Adapters/uDMX';
 import DMXAdapter from './DMX/Adapters/DMXAdapter';
 import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
-import { OutboundPayload } from './Payloads/PayloadBasee';
-import { StatusPayload } from './Payloads/Out/Status';
 import FileSync from './Persistent/FileSync';
-import { BoardData } from '../Common/BoardData';
+import { BoardData } from 'Common/BoardData';
+import { StatusPayload } from 'Common/Networking/Payloads/Server';
+import { SetDimmerPayload } from 'Common/Networking/Payloads/Client';
 
 export default class Luminescence {
 
@@ -33,9 +32,9 @@ export default class Luminescence {
         this._data = sync.loadFromDisk(saveSrc);
 
         // TODO: Load from scene/user config
-        this._data.dimmers.count = 12;
+        this._data.dimmers.count = this._data.channels.count = 12;
 
-        this._data.addChangeListener(() => {
+        this._data.addListenerPersistent(() => {
             sync.saveToDisk(saveSrc, this._data);
         });
 
@@ -62,7 +61,7 @@ export default class Luminescence {
 
         express.route('/dimmer')
             .post((req, res) => {
-                const payload = getOrThrow<SetDimmer>(['addr'], ['levels', 'aliases'], req.body);
+                const payload = getOrThrow<SetDimmerPayload>(['addr'], ['levels', 'aliases'], req.body);
 
                 if (payload.levels !== undefined) this._controller.dimmers.setLevel(payload.addr, Array.isArray(payload.levels) ? payload.levels : [payload.levels]);
                 if (payload.aliases !== undefined) this._controller.dimmers.setAlias(payload.addr, Array.isArray(payload.aliases) ? payload.aliases : [payload.aliases]);
@@ -73,7 +72,7 @@ export default class Luminescence {
     }
 
     // TODO: Make this actually typesafe and not allow duck typing.
-    private static sendResponse<T extends OutboundPayload>(res: Response, payload: T): void {
+    private static sendResponse<T>(res: Response, payload: T): void {
         res.json(payload);
     }
 

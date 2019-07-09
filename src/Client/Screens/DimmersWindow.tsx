@@ -1,12 +1,13 @@
 import { Component } from 'react';
 import { SingleChannel } from '../Components/SingleChannel';
 import * as React from 'react';
-import { DimmerData } from '../../Common/BoardData';
+import { ChannelData, DimmerData } from '../../Common/BoardData';
 import { ContextInstance, RootContext } from '../RootContext';
 import { MSG_UPDATE_DIMMER, UPDATE_DIMMER } from '../Messages';
 
 interface Props {
     dimmerData: DimmerData
+    channelData: ChannelData
 }
 
 interface State {
@@ -29,18 +30,23 @@ export default class DimmersWindow extends Component<Props, State> {
     listDimmers() {
         const children = [];
 
-        const data = this.props.dimmerData;
+        const dimmerData = this.props.dimmerData;
+        const channelData = this.props.channelData;
 
-        for (let i = 0; i < data.count; i++) {
+        for (let i = 0; i < dimmerData.count; i++) {
+            const dimVal = dimmerData.values[i];
+            const parked = dimVal !== undefined && dimVal !== null;
+            const value = parked ? dimmerData.values[i] : channelData.values[i];
+
             children.push(
                 <div
-                    className={'luminescence-controlgroup'}
+                    className={'luminescence-controlgroup ' + (parked ? 'parked' : '')}
                     key={i}
                 >
                     <SingleChannel
                         id={i}
-                        sliderVal={data.values[i] || 0}
-                        sliderLabel={data.names[i] || ''}
+                        sliderVal={value || 0}
+                        sliderLabel={dimmerData.names[i] || ''}
                         onSliderChange={(id, val) => {
                             this.context.msgBus.dispatch<UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {
                                 addr: id,

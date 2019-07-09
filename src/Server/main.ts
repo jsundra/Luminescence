@@ -6,7 +6,7 @@ import './Config/Config';
 
 import Luminescence from './Luminescence';
 import { Request, Response } from 'express';
-import { PayloadError } from './Payloads/In/Payload';
+import { PayloadError } from '../Common/Networking/Payloads/Payload';
 
 const wwwDir = path.join(__dirname, '../www/');
 

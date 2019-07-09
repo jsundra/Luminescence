@@ -12,14 +12,15 @@ export default class DMXController {
 
     private _adapter: DMXAdapter;
 
-    private readonly _routing: Dict<number[]> = {};
-
+    private _dmx: number[] = [];
+    private _volatileChanges: boolean;
     private _intervalId: Timeout;
 
     public constructor(config: SystemConfig, data: BoardData) {
         this._data = data;
         this.dimmers = new DimmersModule(this._data);
 
+        this._data.addListenerVolatile(this.onVolatileDataChange);
         this._intervalId = setInterval(this.update.bind(this), config.dmx.sendRate)
     }
 
@@ -46,16 +47,22 @@ export default class DMXController {
         // }
     }
 
+    private onVolatileDataChange(): void {
+        this._volatileChanges = true;
+    }
+
     private update(): void {
         // TODO: Update chases
 
+        // Compose data
+        // TODO: Dimmer count? Channel count? _shrugs_, need to define source of truth!
+        for (let i = 0; i < this._data.dimmers.count; i++) {
+            this._dmx[i] = this._data.dimmers.values[i] || this._data.channels.values[i];
+        }
+
         // Send DMX
         if (this._adapter && this._data.dimmers.values.length > 0) {
-            this._adapter.sendDMX(this._data.dimmers.values);
+            this._adapter.sendDMX(this._dmx);
         }
-    }
-
-    private getRouting(address: number): number[] {
-        return this._routing[address] || [ address ];
     }
 }
