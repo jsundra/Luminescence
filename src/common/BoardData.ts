@@ -2,6 +2,8 @@ type ChangeHandler = () => void;
 
 export class BoardData {
 
+    public readonly output: OutputData = new OutputData(0);
+
     public readonly dimmers: DimmerData = new DimmerData();
     public readonly channels: ChannelData = new ChannelData();
 
@@ -34,6 +36,14 @@ export class BoardData {
             handler();
         }
     }
+}
+
+export class OutputData {
+    readonly universe: number;
+    values: number[] = [];
+    owner: string[] = [];
+
+    public constructor(universe: number) { this.universe = universe; }
 }
 
 export class DimmerData {
