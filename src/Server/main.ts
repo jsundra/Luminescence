@@ -57,4 +57,24 @@ async function init() {
     server.listen(3000, '0.0.0.0', () => console.log('Server started. Listening on port 3000.'));
 }
 
-init();
+// init();
+
+import { spawn } from 'child_process';
+
+const proc = spawn(`.\\dist\\node\\SerialDMX.exe`, [`COM7`, `24`]);
+proc.stderr.on('data', data => console.error(`SerialDMX error: ${data}`));
+proc.stdout.on('data', data => console.log(`SerialDMX log: ${data}`));
+proc.stdout.on('', data => console.log(`SerialDMX log: ${data}`));
+proc.on('error', error => {
+    console.error(`SerialDMX process error: ${error}`)
+});
+
+var tmp = new Buffer(24);
+for (var i = 0; i < tmp.length; i++) {
+    tmp[i] = 255;
+}
+
+setTimeout(() => {
+    proc.stdin.write(tmp);
+}, 5000);
+
