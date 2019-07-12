@@ -37,5 +37,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "usb": "^1.6.0"
+  },
+  "scripts": {
+  	"server": "cd dist/node && node server.js"
   }
 }

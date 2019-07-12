@@ -32,6 +32,7 @@ export default class DMXController {
         this._adapter = adapter;
 
         if (this._adapter) {
+            this._adapter.setMaxAddr(this._data.dimmers.count);
             this._adapter.open();
         }
     }

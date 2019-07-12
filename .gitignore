@@ -3,5 +3,4 @@ __pycache__/
 node_modules/
 .idea/
 *.suo
-.cache\.*
-.sln.*
+lib/SerialDMX/obj/

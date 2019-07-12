@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO.Ports;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace SerialDMX
 {
@@ -6,19 +10,30 @@ namespace SerialDMX
     {
         public static void Main(string[] args)
         {
-            if (args.Length == 0)
+            if (args.Length < 2)
             {
-                Console.WriteLine("Arguments: COM1 512 30 (COM#, Max Address, Send Delay)");
+                Console.WriteLine("Invalid usage.\nArguments: <VID> <PID> <MAX_ADDR> <SEND_DELAY>");
+                return;
+            }
+
+            var vid = args[0];
+            var pid = args[1];
+            var portId = FindSerialPort(vid, pid);
+
+            if (string.IsNullOrEmpty(portId))
+            {
+                Console.WriteLine($"Unable to find device (VID={vid} PID={pid})");
                 return;
             }
             
-            var COM = args[0];
-            var maxAddr = ParseIntArg(ref args, 1, 512);
-            var sendRate = ParseIntArg(ref args, 2, 30);
+            var maxAddr = ParseIntArg(ref args, 2, 512);
+            var sendRate = ParseIntArg(ref args, 3, 30);
+            
+            Console.WriteLine($"{portId} {maxAddr} {sendRate}");
             
             var dmx = new DMXWriter();
             
-            dmx.Connect(COM, sendRate);
+            dmx.Connect(portId, sendRate, maxAddr);
             Console.WriteLine("Port opened successfully.");
 
             var buffer = new byte[maxAddr];
@@ -32,7 +47,7 @@ namespace SerialDMX
                     {
                         Console.WriteLine($"Over/under read? {read}" );
                     }
-                    Console.WriteLine($"DMX RX: {read} - {buffer}");
+                    
                     dmx.UpdateDMX(buffer);
                 } while (true);
             }
@@ -54,6 +69,41 @@ namespace SerialDMX
                 }
             }
             return @default;
+        }
+        
+        private static string FindSerialPort(string vid, string pid)
+        {
+            var regex = new Regex($"^VID_0{vid}.PID_{pid}");
+
+            var enums = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Enum");
+            foreach (var enumEntry in enums.GetSubKeyNames())
+            {
+                var entryReg = enums.OpenSubKey(enumEntry);
+                foreach (var device in entryReg.GetSubKeyNames())
+                {
+                    if (regex.Match(device).Success)
+                    {
+                        var deviceReg = entryReg.OpenSubKey(device);
+                        foreach (var deviceMisc in deviceReg.GetSubKeyNames())
+                        {
+                            var miscReg = deviceReg.OpenSubKey(deviceMisc);
+
+                            var deviceParams = miscReg.OpenSubKey("Device Parameters");
+                            if (deviceParams == null) continue;
+                            
+                            foreach (var param in deviceParams.GetValueNames())
+                            {
+                                if (param == "PortName")
+                                {
+                                    return (string) deviceParams.GetValue("PortName");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

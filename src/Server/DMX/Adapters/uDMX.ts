@@ -11,6 +11,14 @@ export default class uDMX extends DMXAdapter {
     public static readonly VENDOR_ID: number = 5824;
     public static readonly PRODUCT_ID: number = 1500;
 
+    public open(): void {
+        this._device.open();
+    }
+
+    public close(): void {
+        this._device.close();
+    }
+
     public sendDMX(dmx: number[]): void {
         // Ignore dmx[0].
         for (let addr = 1; addr < dmx.length; addr++) {

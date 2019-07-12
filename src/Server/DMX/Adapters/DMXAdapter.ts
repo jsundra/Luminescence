@@ -7,6 +7,7 @@ export default abstract class DMXAdapter {
     public static readonly VENDOR_ID: number;
 
     protected _device: Device;
+    protected _maxAddr: number;
 
     public get usbDevice(): Device { return this._device; }
 
@@ -14,13 +15,12 @@ export default abstract class DMXAdapter {
         this._device = device;
     }
 
-    // TODO: Check synchronous nature & success / exception
-    public open(): void {
-        this._device.open();
-    }
+    public abstract open(): void;
 
-    public close(): void {
-        this._device.close();
+    public abstract close(): void;
+
+    public setMaxAddr(addr: number): void {
+        this._maxAddr = addr;
     }
 
     public abstract sendDMX(dmx: number[]): void;

@@ -8,12 +8,12 @@ namespace SerialDMX
     public class DMXWriter
     {
         private SerialPort _serialPort;
-        private byte[] _buffer = new byte[513];
+        private byte[] _buffer;
         private bool _send;
 
         private int _sendRate = 30;
 
-        public void Connect(string com, int sendRate)
+        public void Connect(string com, int sendRate, int maxAddr)
         {
             if (_serialPort != null)
             {
@@ -21,6 +21,7 @@ namespace SerialDMX
                 return;
             }
 
+            _buffer = new byte[maxAddr + 1];
             _sendRate = sendRate;
             
             _serialPort = new SerialPort
@@ -46,8 +47,8 @@ namespace SerialDMX
 
         public void UpdateDMX(byte[] buffer)
         {
-            // TODO: Does this need locking/syncing?!
-            _buffer = buffer;
+            // Ignore [0] when copying, DMX protocol requires [0] = 0.
+            Buffer.BlockCopy(buffer, 0, _buffer, 1, buffer.Length);
         }
 
         public void Close()
