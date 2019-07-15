@@ -1,8 +1,8 @@
 import { HTTP } from './Util/HTTP';
-import { BoardData, DimmerData } from 'Common/BoardData';
+import { BoardData } from 'Common/BoardData';
 import MessageBus from './MessageBus';
-import { MSG_UPDATE_DIMMER, UPDATE_DIMMER } from './Messages';
-import { SetDimmerPayload } from '../Common/Networking/Payloads/Client';
+import { MSG_UPDATE_DIMMER, UNPARK_DIMMER, UPDATE_DIMMER } from './Messages';
+import { SetDimmerPayload, SetParkPayload } from '../Common/Networking/Payloads/Client';
 
 export module API {
 	export function Status(): Promise<any> {
@@ -21,10 +21,15 @@ export module API {
 			addr: addr
 		};
 
-		if (level > -1) payload.levels = [ level ];
-        if (name !== null) payload.aliases = [ name ];
+		if (level > -1) payload.intensity = level;
+        if (name !== null) payload.alias = name;
 
 		return HTTP.Post(url, payload);
+	}
+
+	export function UnparkDimmer(addr: number): Promise<any> {
+		const payload: SetParkPayload = { addr };
+		return HTTP.Post(`/park`, payload);
 	}
 
 	export function bindMessageBus(msgBus: MessageBus): void {
@@ -32,6 +37,10 @@ export module API {
 			SetDimmer(msg.addr, msg.value, msg.alias).catch(reason =>
 				console.error(`Error setting dimmer (${reason.toString()})`)
 			);
+		});
+
+		msgBus.subscribe<UNPARK_DIMMER>(UNPARK_DIMMER, (msg) => {
+			UnparkDimmer(msg.addr).catch(reason => console.error(`Error unparking dimmer (${reason.toString()}`));
 		});
 	}
 }

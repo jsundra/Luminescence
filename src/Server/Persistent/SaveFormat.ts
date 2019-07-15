@@ -30,6 +30,8 @@ export default class PersistentBoardData implements IPersistentBoardData {
                 value: data.dimmers.values[i]
             };
         }
+
+        console.log(this.dimmers[1]);
     }
 
     public getBoardData(): BoardData {

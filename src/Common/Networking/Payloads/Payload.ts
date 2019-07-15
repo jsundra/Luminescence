@@ -6,7 +6,7 @@ export class PayloadError extends Error {
     public constructor(msg: string) { super(msg); }
 }
 
-export function getOrThrow<T>(required: Array<keyof T>, optional: Array<keyof T>, json: any): T {
+export function getOrThrow<T>(json: any, required: Array<keyof T>, optional?: Array<keyof T>): T {
     if (!json) {
         throw new PayloadError('Missing json.');
     }
@@ -22,11 +22,13 @@ export function getOrThrow<T>(required: Array<keyof T>, optional: Array<keyof T>
         rtn[prop] = value;
     }
 
-    for (const prop of optional) {
-        const value = json[prop];
+    if (optional) {
+        for (const prop of optional) {
+            const value = json[prop];
 
-        if (value !== undefined) {
-            rtn[prop] = value;
+            if (value !== undefined) {
+                rtn[prop] = value;
+            }
         }
     }
 

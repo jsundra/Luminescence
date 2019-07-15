@@ -1,7 +1,15 @@
 import BoardModule from './BoardModule';
-import { Fixture } from '../../Common/BoardData';
+import { DimmerOwnership, Fixture } from '../../Common/BoardData';
 
 export default class ChannelsModule extends BoardModule {
+
+    public getOutput(addr: number): Nullable<number> {
+        return null;
+    }
+
+    public getOwnershipLevel(): DimmerOwnership {
+        return DimmerOwnership.None;
+    }
 
     public assignFixture(address: number, fixture: Fixture): void {
         this._boardData.channels.fixtures[address] = fixture;

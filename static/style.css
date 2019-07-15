@@ -91,3 +91,9 @@ h3 {
 	overflow: auto;
 	height: 100%;
 }
+
+.unpark {
+	width: 30px;
+	height: 30px;
+	float: left;
+}

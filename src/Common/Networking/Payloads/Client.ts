@@ -2,8 +2,13 @@ import Payload from './Payload';
 
 export interface SetDimmerPayload extends Payload {
     addr: number;
-    levels?: number[];
-    aliases?: string[];
+    intensity?: number;
+    alias?: string;
+}
+
+export interface SetParkPayload extends Payload {
+    addr: number;
+    intensity?: number;
 }
 
 export interface AssignChannelPayload extends Payload {

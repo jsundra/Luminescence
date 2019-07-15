@@ -1,13 +1,13 @@
+import * as React from 'react';
 import { Component } from 'react';
 import { SingleChannel } from '../Components/SingleChannel';
-import * as React from 'react';
-import { ChannelData, DimmerData } from '../../Common/BoardData';
+import { DimmerData, DimmerOwnership, OutputData } from '../../Common/BoardData';
 import { ContextInstance, RootContext } from '../RootContext';
-import { MSG_UPDATE_DIMMER, UPDATE_DIMMER } from '../Messages';
+import { MSG_UPDATE_DIMMER, UNPARK_DIMMER, UPDATE_DIMMER } from '../Messages';
 
 interface Props {
-    dimmerData: DimmerData
-    channelData: ChannelData
+    outputData: OutputData;
+    dimmerData: DimmerData;
 }
 
 interface State {
@@ -30,22 +30,30 @@ export default class DimmersWindow extends Component<Props, State> {
     listDimmers() {
         const children = [];
 
+        const outputData = this.props.outputData;
         const dimmerData = this.props.dimmerData;
-        const channelData = this.props.channelData;
 
-        for (let i = 0; i < dimmerData.count; i++) {
-            const dimVal = dimmerData.values[i];
-            const parked = dimVal !== undefined && dimVal !== null;
-            const value = parked ? dimmerData.values[i] : channelData.values[i];
+        for (let i = 0; i < outputData.values.length; i++) {
+            const parked = outputData.owner[i] === DimmerOwnership.Parked;
+            const index = i;
 
             children.push(
                 <div
                     className={'luminescence-controlgroup ' + (parked ? 'parked' : '')}
                     key={i}
                 >
+                    { parked && <img
+                        className={'unpark'}
+                        src={`/img/icon/unlock.png`}
+                        onClick={() => {
+                            this.context.msgBus.dispatch<UNPARK_DIMMER>(UNPARK_DIMMER, {
+                                addr: index
+                            });
+                        }}
+                    />}
                     <SingleChannel
                         id={i}
-                        sliderVal={value || 0}
+                        sliderVal={outputData.values[i] || 0}
                         sliderLabel={dimmerData.names[i] || ''}
                         onSliderChange={(id, val) => {
                             this.context.msgBus.dispatch<UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {
@@ -71,9 +79,7 @@ export default class DimmersWindow extends Component<Props, State> {
         return (
             <div className={'flex-parent'}>
                 <div className={'flex'}
-                     onClick={(e) => {
-                         e.preventDefault();
-                     }}
+                     onClick={e => e.preventDefault()}
                 >
                     {this.listDimmers()}
                 </div>

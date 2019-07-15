@@ -8,9 +8,9 @@ import uDMX from './DMX/Adapters/uDMX';
 import DMXAdapter from './DMX/Adapters/DMXAdapter';
 import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
 import FileSync from './Persistent/FileSync';
-import { BoardData } from 'Common/BoardData';
+import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { StatusPayload } from 'Common/Networking/Payloads/Server';
-import { SetDimmerPayload } from 'Common/Networking/Payloads/Client';
+import { SetDimmerPayload, SetParkPayload } from 'Common/Networking/Payloads/Client';
 
 export default class Luminescence {
 
@@ -44,8 +44,13 @@ export default class Luminescence {
         this.watchUSB();
 
         for (let i = 0; i < 150; i++) {
-            this._controller.dimmers.setLevel(i, [0]);
+            this._controller.setDimmerValue(i, DimmerOwnership.Relinquished);
         }
+
+        // Verify this is needed
+        // for (let i = 0; i < 150; i++) {
+        //     this._controller.dimmers.setLevel(i, [0]);
+        // }
 
         // setInterval(() => {
         //     const dim = Math.round(Math.random() * 72) + 49;
@@ -72,10 +77,20 @@ export default class Luminescence {
 
         express.route('/dimmer')
             .post((req, res) => {
-                const payload = getOrThrow<SetDimmerPayload>(['addr'], ['levels', 'aliases'], req.body);
+                const payload = getOrThrow<SetDimmerPayload>(req.body, ['addr'], ['intensity', 'alias']);
 
-                if (payload.levels !== undefined) this._controller.dimmers.setLevel(payload.addr, Array.isArray(payload.levels) ? payload.levels : [payload.levels]);
-                if (payload.aliases !== undefined) this._controller.dimmers.setAlias(payload.addr, Array.isArray(payload.aliases) ? payload.aliases : [payload.aliases]);
+                if (payload.intensity !== undefined) this._controller.dimmers.setLevel(payload.addr, payload.intensity);
+                if (payload.alias !== undefined) this._controller.dimmers.setAlias(payload.addr, payload.alias);
+
+                res.sendStatus(204);
+            }
+        );
+
+        express.route('/park')
+            .post((req, res) => {
+                const payload = getOrThrow<SetParkPayload>(req.body, ['addr'], ['intensity']);
+
+                this._controller.dimmers.setLevel(payload.addr, payload.intensity);
 
                 res.sendStatus(204);
             }

@@ -38,10 +38,17 @@ export class BoardData {
     }
 }
 
+export enum DimmerOwnership {
+    Parked = 0,
+    Focus = 1,
+    None,
+    Relinquished
+}
+
 export class OutputData {
     readonly universe: number;
     values: number[] = [];
-    owner: string[] = [];
+    owner: DimmerOwnership[] = [];
 
     public constructor(universe: number) { this.universe = universe; }
 }

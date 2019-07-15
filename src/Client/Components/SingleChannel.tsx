@@ -27,7 +27,7 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
 
     public render() {
         return (
-            <div className={'luminescence-singlechannel'}>
+            <div className={'luminescence-singlechannel'} onTouchMove={e => e.preventDefault()}>
                 <div>{this.props.id + 1}</div>
                 <Slider
                     className={'slider'}

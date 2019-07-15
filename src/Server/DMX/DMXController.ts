@@ -1,13 +1,15 @@
 import DMXAdapter from './Adapters/DMXAdapter';
-import Timeout = NodeJS.Timeout;
 import SystemConfig from '../Config/SystemConfig';
-import { BoardData, DimmerData } from 'Common/BoardData';
+import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import DimmersModule from './DimmersModule';
+import BoardModule from './BoardModule';
+import Timeout = NodeJS.Timeout;
 
 export default class DMXController {
 
     public readonly dimmers: DimmersModule;
 
+    private readonly _modules: BoardModule[];
     private readonly _data: BoardData;
 
     private _adapter: DMXAdapter;
@@ -18,7 +20,11 @@ export default class DMXController {
 
     public constructor(config: SystemConfig, data: BoardData) {
         this._data = data;
-        this.dimmers = new DimmersModule(this._data);
+        this.dimmers = new DimmersModule(this, this._data);
+
+        this._modules = [ // Set the order of ownership resolution.
+            this.dimmers
+        ];
 
         this._data.addListenerVolatile(this.onVolatileDataChange);
         this._intervalId = setInterval(this.update.bind(this), config.dmx.sendRate)
@@ -37,15 +43,36 @@ export default class DMXController {
         }
     }
 
-    public setChannel(address: number, data: number[]) : void {
-        // if (typeof data === 'number') data = [ data ];
-        //
-        // for (const value of data) {
-        //     const routing = this.getRouting(address++);
-        //     for (const dimmer of routing) {
-        //         this._dimmerValues.fillRange(dimmer, value);
-        //     }
-        // }
+    // TODO: Make this safe so nothing can pass `relinquish` maliciously?
+    public setDimmerValue(addr: number, ownership: DimmerOwnership, intensity?: number) {
+        console.log(ownership);
+        if (ownership == DimmerOwnership.Relinquished) {
+            // Find a new owner, if any.
+            let updated: boolean;
+            for (const module of this._modules) {
+                const intensity = module.getOutput(addr);
+                if (!intensity) continue;
+
+                this._data.output.owner[addr] = module.getOwnershipLevel();
+                this._data.output.values[addr] = intensity;
+                updated = true;
+                break;
+            }
+
+            console.log(updated);
+            if (!updated) {
+                this._data.output.owner[addr] = DimmerOwnership.None;
+                this._data.output.values[addr] = 0;
+            }
+
+        } else {
+            // Set, if available.
+            const curOwner = this._data.output.owner[addr];
+            if (curOwner < ownership) return;
+
+            if (curOwner > ownership) this._data.output.owner[addr] = ownership;
+            this._data.output.values[addr] = intensity;
+        }
     }
 
     private onVolatileDataChange(): void {
@@ -54,14 +81,6 @@ export default class DMXController {
 
     private update(): void {
         // TODO: Update chases
-
-        for (let i = 0; i < this._data.output.values.length; i++) {
-            const dimmerValue = this._data.dimmers.values[i];
-            if (dimmerValue) {
-                this._data.output.values[i] = dimmerValue;
-                this._data.output.owner[i] = 'park';
-            }
-        }
 
         // Compose data
         // TODO: Dimmer count? Channel count? _shrugs_, need to define source of truth!

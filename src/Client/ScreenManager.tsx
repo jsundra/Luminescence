@@ -1,14 +1,13 @@
 import React = require('react');
-import { Component, PureComponent, ReactNode } from 'react';
+import { Component, ReactNode } from 'react';
 import { ScreenTypes } from './Screens/ScreenTypes';
 import { Mosaic, MosaicBranch, MosaicWindow } from 'react-mosaic-component';
-import PatchWindow from './Screens/PatchWindow';
 import DimmersWindow from './Screens/DimmersWindow';
-import { BoardData } from '../Common/BoardData';
+import { BoardData, DimmerOwnership } from '../Common/BoardData';
 import { API } from './API';
-import MessageBus from './MessageBus';
-import { MSG_UPDATE_DIMMER, UPDATE_DIMMER } from './Messages';
+import { MSG_UPDATE_DIMMER, UNPARK_DIMMER, UPDATE_DIMMER } from './Messages';
 import { ContextInstance, RootContext } from './RootContext';
+import ChannelsWindow from './Screens/ChannelsWindow';
 
 interface State {
     boardData: BoardData;
@@ -22,8 +21,6 @@ export default class ScreenManager extends Component<{}, State> {
     public constructor(props: never) {
         super(props);
 
-        console.log(this);
-
         this.state = {
             boardData: new BoardData()
         }
@@ -33,34 +30,47 @@ export default class ScreenManager extends Component<{}, State> {
     public componentWillMount() {
         API.GetBoardData()
             .then(boardData => {
-                console.log('New data!', boardData);
                 this.setState({ boardData });
             })
             .catch(reason => {
                 console.error(`Error getting board data: ${reason}`);
             });
 
+        // TODO: Get updated state from server!!!
+
         this.context.msgBus.subscribe<UPDATE_DIMMER>(MSG_UPDATE_DIMMER, (msg) => {
             const boardData = this.state.boardData;
 
             if (msg.value) {
-                boardData.dimmers.values[msg.addr] = msg.value;
+                boardData.output.values[msg.addr] = msg.value;
             }
 
             if (msg.alias) {
                 boardData.dimmers.names[msg.addr] = msg.alias;
             }
 
+            boardData.output.owner[msg.addr] = DimmerOwnership.Parked;
+
             this.setState({ boardData });
-        })
+        });
+
+        this.context.msgBus.subscribe<UNPARK_DIMMER>(UNPARK_DIMMER, (msg) => {
+            const boardData = this.state.boardData;
+            boardData.output.owner[msg.addr] = DimmerOwnership.Relinquished;
+            this.setState({ boardData });
+        });
     }
 
     public render(): ReactNode {
+        // TODO: Validate against screens
+        let defaultScreen = (new URLSearchParams(location.search)).get('view');
+        defaultScreen = defaultScreen[0].toUpperCase() + defaultScreen.substring(1);
+
         return (
             <div>
                 <Mosaic<ScreenTypes>
                     renderTile={this.createScreen.bind(this)}
-                    initialValue='Dimmers'
+                    initialValue={defaultScreen || 'Dimmers'}
                     className={'mosaic-blueprint-theme bp3-dark'}
                 />
             </div>
@@ -70,14 +80,14 @@ export default class ScreenManager extends Component<{}, State> {
     private createScreen<T extends ScreenTypes>(type: T, path: MosaicBranch[]): JSX.Element {
         let elm: JSX.Element;
         switch(type) {
-            case 'Patch':
-                elm = <PatchWindow/>;
-                break;
             case 'Dimmers':
                 elm = <DimmersWindow
+                    outputData={this.state.boardData.output}
                     dimmerData={this.state.boardData.dimmers}
-                    channelData={this.state.boardData.channels}
                 />;
+                break;
+            case 'Channels':
+                elm = <ChannelsWindow/>;
                 break;
         }
         return (<MosaicWindow<T> title={type} path={path}>{elm}</MosaicWindow>);
