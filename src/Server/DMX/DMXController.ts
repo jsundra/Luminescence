@@ -55,6 +55,14 @@ export default class DMXController {
     private update(): void {
         // TODO: Update chases
 
+        for (let i = 0; i < this._data.output.values.length; i++) {
+            const dimmerValue = this._data.dimmers.values[i];
+            if (dimmerValue) {
+                this._data.output.values[i] = dimmerValue;
+                this._data.output.owner[i] = 'park';
+            }
+        }
+
         // Compose data
         // TODO: Dimmer count? Channel count? _shrugs_, need to define source of truth!
         for (let i = 0; i < this._data.dimmers.count; i++) {

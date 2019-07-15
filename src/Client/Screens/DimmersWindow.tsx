@@ -69,8 +69,14 @@ export default class DimmersWindow extends Component<Props, State> {
 
     render() {
         return (
-            <div className={'flex'}>
-                {this.listDimmers()}
+            <div className={'flex-parent'}>
+                <div className={'flex'}
+                     onClick={(e) => {
+                         e.preventDefault();
+                     }}
+                >
+                    {this.listDimmers()}
+                </div>
             </div>
         );
     }

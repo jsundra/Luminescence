@@ -2,7 +2,8 @@ import { BoardData } from 'Common/BoardData';
 
 type DimmerData = {
     [address: number]: {
-        name: string
+        name: string,
+        value?: number
     }
 };
 
@@ -23,12 +24,10 @@ export default class PersistentBoardData implements IPersistentBoardData {
 
     public setValues(data: BoardData): void {
         // Dimmers
-        for (const i in data.dimmers.names) {
-            const name = data.dimmers.names[i];
-            if (name === undefined) continue;
-
+        for (let i = 0; i < data.dimmers.count; i++) {
             this.dimmers[i] = {
-                name
+                name: data.dimmers.names[i],
+                value: data.dimmers.values[i]
             };
         }
     }
@@ -38,7 +37,9 @@ export default class PersistentBoardData implements IPersistentBoardData {
 
         // Dimmers
         for (const i in this.dimmers) {
-            rtn.dimmers.names[i] = this.dimmers[i].name;
+            const data = this.dimmers[i];
+            rtn.dimmers.names[i] = data.name;
+            rtn.dimmers.values[i] = data.value
         }
 
         return rtn;

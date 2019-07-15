@@ -4,7 +4,7 @@
   "description": "Web based DMX controller",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "cd dist/node && node server.js"
   },
   "author": "James Sundra",
   "license": "ISC",
@@ -37,8 +37,5 @@
   "dependencies": {
     "express": "^4.17.1",
     "usb": "^1.6.0"
-  },
-  "scripts": {
-  	"server": "cd dist/node && node server.js"
   }
 }

@@ -6,6 +6,9 @@ import PersistentBoardData from './SaveFormat';
 
 export default class FileSync {
 
+    private readonly WRITE_DELAY_MS = 1000;
+    private _writePending: boolean = false;
+
     private _saveData: PersistentBoardData = new PersistentBoardData();
 
     public loadFromDisk(src: string): BoardData {
@@ -24,22 +27,30 @@ export default class FileSync {
     }
 
     public saveToDisk(src: string, data: BoardData): void {
-        console.log(`Saving BoardData to disk: ${src}`);
+        if (!this._writePending) {
+            this._writePending = true;
 
-        function logError(err: Error) {
-            console.error(`Error saving BoardData to disk!
+            setTimeout(() => {
+                this._writePending = false;
+
+                console.log(`Saving BoardData to disk: ${src}`);
+
+                function logError(err: Error) {
+                    console.error(`Error saving BoardData to disk!
 -> Error: ${err}
 -> Src: ${src}`);
-        }
+                }
 
-        this._saveData.setValues(data);
+                this._saveData.setValues(data);
 
-        try {
-            fs.writeFile(src, JSON.stringify(this._saveData), (err) => {
-                if (err) logError(err);
-            })
-        } catch(e) {
-            logError(e);
+                try {
+                    fs.writeFile(src, JSON.stringify(this._saveData), (err) => {
+                        if (err) logError(err);
+                    })
+                } catch(e) {
+                    logError(e);
+                }
+            }, this.WRITE_DELAY_MS);
         }
     }
 }

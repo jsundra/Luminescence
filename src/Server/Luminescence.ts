@@ -32,7 +32,7 @@ export default class Luminescence {
         this._data = sync.loadFromDisk(saveSrc);
 
         // TODO: Load from scene/user config
-        this._data.dimmers.count = this._data.channels.count = 12;
+        this._data.dimmers.count = this._data.channels.count = 150;
 
         this._data.addListenerPersistent(() => {
             sync.saveToDisk(saveSrc, this._data);
@@ -42,6 +42,17 @@ export default class Luminescence {
 
         this.findAdapter();
         this.watchUSB();
+
+        for (let i = 0; i < 150; i++) {
+            this._controller.dimmers.setLevel(i, [0]);
+        }
+
+        // setInterval(() => {
+        //     const dim = Math.round(Math.random() * 72) + 49;
+        //     const val = this._data.dimmers.values[dim] === 255 ? 0 : 255;
+        //     console.log(dim, val);
+        //     this._controller.dimmers.setLevel(dim, [0]);
+        // }, 50);
     }
 
     public configureEndpoints(express: Express): void {

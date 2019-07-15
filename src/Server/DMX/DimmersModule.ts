@@ -6,6 +6,7 @@ export default class DimmersModule extends BoardModule {
 
     public setLevel(address: number, data: number[]): void {
         ArrayUtils.fillRange(this._boardData.dimmers.values, address, data);
+        this._boardData.markDirty();
     }
 
     public setAlias(address: number, aliases: string[]): void {
