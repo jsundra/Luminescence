@@ -4,26 +4,29 @@ import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import DimmersModule from './DimmersModule';
 import BoardModule from './BoardModule';
 import Timeout = NodeJS.Timeout;
+import ChannelsModule from './ChannelsModule';
 
 export default class DMXController {
 
     public readonly dimmers: DimmersModule;
+    public readonly channels: ChannelsModule;
 
     private readonly _modules: BoardModule[];
     private readonly _data: BoardData;
 
     private _adapter: DMXAdapter;
 
-    private _dmx: number[] = [];
     private _volatileChanges: boolean;
     private _intervalId: Timeout;
 
     public constructor(config: SystemConfig, data: BoardData) {
         this._data = data;
         this.dimmers = new DimmersModule(this, this._data);
+        this.channels = new ChannelsModule(this, this._data);
 
         this._modules = [ // Set the order of ownership resolution.
-            this.dimmers
+            this.dimmers,
+            this.channels
         ];
 
         this._data.addListenerVolatile(this.onVolatileDataChange);
@@ -38,14 +41,15 @@ export default class DMXController {
         this._adapter = adapter;
 
         if (this._adapter) {
-            this._adapter.setMaxAddr(this._data.dimmers.count);
+            this._adapter.setMaxAddr(this._data.output.values.length);
             this._adapter.open();
         }
     }
 
     // TODO: Make this safe so nothing can pass `relinquish` maliciously?
     public setDimmerValue(addr: number, ownership: DimmerOwnership, intensity?: number) {
-        console.log(ownership);
+        if (intensity) intensity = intensity * 2.55; // Convert 0-100 -> 0-255
+
         if (ownership == DimmerOwnership.Relinquished) {
             // Find a new owner, if any.
             let updated: boolean;
@@ -59,7 +63,6 @@ export default class DMXController {
                 break;
             }
 
-            console.log(updated);
             if (!updated) {
                 this._data.output.owner[addr] = DimmerOwnership.None;
                 this._data.output.values[addr] = 0;
@@ -83,14 +86,12 @@ export default class DMXController {
         // TODO: Update chases
 
         // Compose data
-        // TODO: Dimmer count? Channel count? _shrugs_, need to define source of truth!
-        for (let i = 0; i < this._data.dimmers.count; i++) {
-            this._dmx[i] = this._data.dimmers.values[i] || this._data.channels.values[i];
+        for (let i = 0; i < this._data.output.values.length; i++) {
         }
 
         // Send DMX
         if (this._adapter && this._data.dimmers.values.length > 0) {
-            this._adapter.sendDMX(this._dmx);
+            this._adapter.sendDMX(this._data.output.values);
         }
     }
 }

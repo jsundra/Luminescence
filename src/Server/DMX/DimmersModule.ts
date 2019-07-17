@@ -1,12 +1,10 @@
 import BoardModule from './BoardModule';
-import { ArrayUtils } from 'Common/Util/ArrayUtils';
 import { DimmerOwnership } from '../../Common/BoardData';
 
 
 export default class DimmersModule extends BoardModule {
 
     public getOutput(addr: number): Nullable<number> {
-        console.log(this._boardData.dimmers.values);
         return this._boardData.dimmers.values[addr];
     }
 

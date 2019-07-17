@@ -63,14 +63,14 @@ export default class ScreenManager extends Component<{}, State> {
 
     public render(): ReactNode {
         // TODO: Validate against screens
-        let defaultScreen = (new URLSearchParams(location.search)).get('view');
-        defaultScreen = defaultScreen[0].toUpperCase() + defaultScreen.substring(1);
+        let screenParam: any = (new URLSearchParams(location.search)).get('view');
+        const defaultScreen: ScreenTypes = (ScreenTypes[screenParam && (screenParam[0].toUpperCase() + screenParam.substring(1))]) as ScreenTypes;
 
         return (
             <div>
                 <Mosaic<ScreenTypes>
                     renderTile={this.createScreen.bind(this)}
-                    initialValue={defaultScreen || 'Dimmers'}
+                    initialValue={defaultScreen || ScreenTypes.Dimmers}
                     className={'mosaic-blueprint-theme bp3-dark'}
                 />
             </div>
@@ -87,7 +87,9 @@ export default class ScreenManager extends Component<{}, State> {
                 />;
                 break;
             case 'Channels':
-                elm = <ChannelsWindow/>;
+                elm = <ChannelsWindow
+                    channelData={this.state.boardData.channels}
+                />;
                 break;
         }
         return (<MosaicWindow<T> title={type} path={path}>{elm}</MosaicWindow>);

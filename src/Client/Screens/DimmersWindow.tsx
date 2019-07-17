@@ -27,7 +27,7 @@ export default class DimmersWindow extends Component<Props, State> {
         super(props);
     }
 
-    listDimmers() {
+    listDimmers(): JSX.Element[] {
         const children = [];
 
         const outputData = this.props.outputData;
@@ -75,7 +75,7 @@ export default class DimmersWindow extends Component<Props, State> {
         return children;
     }
 
-    render() {
+    public render() {
         return (
             <div className={'flex-parent'}>
                 <div className={'flex'}

@@ -1,7 +1,5 @@
-export type ScreenTypes =
-      'Dimmers'
-    | 'Patch'
-    | 'Stage'
-    | 'Submasters'
-    | 'Channels'
-;
+export enum ScreenTypes {
+    Dimmers = 'Dimmers',
+    Channels = 'Channels',
+    Groups = 'Groups'
+}

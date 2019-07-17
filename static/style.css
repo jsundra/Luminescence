@@ -37,13 +37,12 @@ h3 {
 	padding: 15px;
 }
 
-
-
 .luminescence-controlgroup {
-	background-color: #30404d;
-	border: solid #30404d;
-	border-radius: 5px;
-	margin: 5px;
+    display: inline-block;
+	  background-color: #30404d;
+	  border: solid #30404d;
+	  border-radius: 5px;
+	  margin: 5px;
 }
 
 /* SingleChannel */
@@ -96,4 +95,25 @@ h3 {
 	width: 30px;
 	height: 30px;
 	float: left;
+}
+
+.btn-icon {
+    font-size: 50px;
+    border: solid #a5acbd;
+    border-radius: 60px;
+    width: 60px;
+    height: 60px;
+    float: left;
+    text-align: center;
+    line-height: 44px;
+    user-select: none;
+    margin: 15px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.overlay {
+    text-align: center;
 }

@@ -1,4 +1,5 @@
 import Payload from './Payload';
+import { FixtureType } from 'Common/Fixtures/FixtureType';
 
 export interface SetDimmerPayload extends Payload {
     addr: number;
@@ -11,12 +12,7 @@ export interface SetParkPayload extends Payload {
     intensity?: number;
 }
 
-export interface AssignChannelPayload extends Payload {
+export interface AssignFixturePayload extends Payload {
     addr: number;
-    fixtureId: string;
-}
-
-export interface UpdateChannelPayload extends Payload {
-    addr: number;
-    values?: number[];
+    type: FixtureType;
 }

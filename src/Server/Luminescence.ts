@@ -10,7 +10,7 @@ import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
 import FileSync from './Persistent/FileSync';
 import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { StatusPayload } from 'Common/Networking/Payloads/Server';
-import { SetDimmerPayload, SetParkPayload } from 'Common/Networking/Payloads/Client';
+import { AssignFixturePayload, SetDimmerPayload, SetParkPayload } from 'Common/Networking/Payloads/Client';
 
 export default class Luminescence {
 
@@ -32,7 +32,7 @@ export default class Luminescence {
         this._data = sync.loadFromDisk(saveSrc);
 
         // TODO: Load from scene/user config
-        this._data.dimmers.count = this._data.channels.count = 150;
+        this._data.output.values.length = 150;
 
         this._data.addListenerPersistent(() => {
             sync.saveToDisk(saveSrc, this._data);
@@ -94,6 +94,24 @@ export default class Luminescence {
 
                 res.sendStatus(204);
             }
+        );
+
+        express.route(`/channel/:action`)
+            .post(((req, res) => {
+                if (!req.params.action) {
+                    res.status(400).send({error: 'Action required.'});
+                }
+                switch (req.params.action) {
+                    case 'assign':
+                        const payload = getOrThrow<AssignFixturePayload>(req.body, ['addr', 'type']);
+                        this._controller.channels.assignFixture(payload.addr, payload.type);
+                        break;
+                    default:
+                        res.status(400).send({error: 'Unknown action.'});
+                        return;
+                }
+                res.sendStatus(204);
+            })
         );
     }
 

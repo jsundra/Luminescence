@@ -1,19 +1,29 @@
 import { BoardData } from 'Common/BoardData';
 
-type DimmerData = {
+type DimmerSave = {
     [address: number]: {
         name: string,
         value?: number
     }
 };
 
+type ChannelSave = {
+    [address: number]: {
+        type: string,
+        alias: string
+        values?: number[];
+    };
+}
+
 export interface IPersistentBoardData {
-    dimmers: DimmerData;
+    dimmers: DimmerSave;
+    channels: ChannelSave;
 }
 
 export default class PersistentBoardData implements IPersistentBoardData {
 
-    public readonly dimmers: DimmerData = <any>{};
+    public readonly dimmers: DimmerSave = <any>{};
+    public readonly channels: ChannelSave = <any>{};
 
     public setFromJSON(data: any) {
         for (const key in data) {
@@ -24,14 +34,23 @@ export default class PersistentBoardData implements IPersistentBoardData {
 
     public setValues(data: BoardData): void {
         // Dimmers
-        for (let i = 0; i < data.dimmers.count; i++) {
+        for (let i = 0; i < data.output.values.length; i++) {
             this.dimmers[i] = {
                 name: data.dimmers.names[i],
                 value: data.dimmers.values[i]
             };
         }
 
-        console.log(this.dimmers[1]);
+        // Channels
+        for (const addr in data.channels.fixtures) {
+            const fixture = data.channels.fixtures[addr];
+
+
+            this.channels[addr] = {
+                type: fixture.type,
+                alias: fixture.alias,
+            }
+        }
     }
 
     public getBoardData(): BoardData {

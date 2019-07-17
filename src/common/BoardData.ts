@@ -1,3 +1,5 @@
+import { FixtureType } from 'Common/Fixtures/FixtureType';
+
 type ChangeHandler = () => void;
 
 export class BoardData {
@@ -54,20 +56,18 @@ export class OutputData {
 }
 
 export class DimmerData {
-    count: number;
     values: number[] = [];
     names: string[] = [];
 }
 
 export class ChannelData {
-    count: number;
     values: number[] = [];
     fixtures: {[index: number]: Fixture} = {};
 }
 
-export class Fixture {
-    stride: number;
-    name: string;
+export interface Fixture {
+    readonly type: FixtureType;
+    readonly stride: number;
     alias: string;
 }
 

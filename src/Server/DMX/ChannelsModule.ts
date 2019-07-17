@@ -1,5 +1,7 @@
 import BoardModule from './BoardModule';
 import { DimmerOwnership, Fixture } from '../../Common/BoardData';
+import { FixtureType } from '../../Common/Fixtures/FixtureType';
+import { FixtureUtils } from '../../Common/Fixtures/FixtureUtils';
 
 export default class ChannelsModule extends BoardModule {
 
@@ -11,8 +13,8 @@ export default class ChannelsModule extends BoardModule {
         return DimmerOwnership.None;
     }
 
-    public assignFixture(address: number, fixture: Fixture): void {
-        this._boardData.channels.fixtures[address] = fixture;
+    public assignFixture(address: number, type: FixtureType): void {
+        this._boardData.channels.fixtures[address] = FixtureUtils.mapFixture(type);
     }
 
     public updateFixture(channel: number, values: number[]): void {
