@@ -47,8 +47,8 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                        type="text"
                        dir="auto"
                        defaultValue={this.props.sliderLabel}
-                       onBlur={(x) => {
-                           const newText = x.target.value;
+                       onBlur={(e) => {
+                           const newText = e.target.value;
                            if (this.props.sliderLabel !== newText) {
                                this.props.onNameChange(this.props.id, newText);
                            }

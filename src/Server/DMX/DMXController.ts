@@ -85,10 +85,6 @@ export default class DMXController {
     private update(): void {
         // TODO: Update chases
 
-        // Compose data
-        for (let i = 0; i < this._data.output.values.length; i++) {
-        }
-
         // Send DMX
         if (this._adapter && this._data.dimmers.values.length > 0) {
             this._adapter.sendDMX(this._data.output.values);

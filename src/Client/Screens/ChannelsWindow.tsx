@@ -3,6 +3,7 @@ import { ChannelData } from 'Common/BoardData';
 import { Menu, MenuItem, Overlay, Popover } from '@blueprintjs/core';
 import { BaseWindow } from './BaseWindow';
 import { AllFixtures, FixtureType } from '../../Common/Fixtures/FixtureType';
+import { SingleChannel } from '../Components/SingleChannel';
 interface Props {
     channelData: ChannelData;
 }
@@ -22,7 +23,18 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
         const channelData = this.props.channelData;
 
         for (const addr in channelData.fixtures) {
-
+            const fixture = channelData.fixtures[addr];
+            switch (fixture.type) {
+                case 'Single Dimmer':
+                    children.push(<SingleChannel
+                        key={addr}
+                        // @ts-ignore
+                        id={addr}
+                        sliderVal={}
+                        onSliderChange={}
+                        onNameChange={}
+                    />);
+            }
         }
 
         return children;
