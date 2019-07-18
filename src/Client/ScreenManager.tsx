@@ -2,12 +2,13 @@ import React = require('react');
 import { Component, ReactNode } from 'react';
 import { ScreenTypes } from './Screens/ScreenTypes';
 import { Mosaic, MosaicBranch, MosaicWindow } from 'react-mosaic-component';
-import DimmersWindow from './Screens/DimmersWindow';
 import { BoardData, DimmerOwnership } from '../Common/BoardData';
 import { API } from './API';
-import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from './Messages';
+import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_ASSIGN_FIXTURE } from './Messages';
 import { ContextInstance, RootContext } from './RootContext';
+import DimmersWindow from './Screens/DimmersWindow';
 import ChannelsWindow from './Screens/ChannelsWindow';
+import { FixtureUtils } from '../Common/Fixtures/FixtureUtils';
 
 interface State {
     boardData: BoardData;
@@ -26,7 +27,6 @@ export default class ScreenManager extends Component<{}, State> {
         }
     }
 
-
     public componentWillMount() {
         API.GetBoardData()
             .then(boardData => {
@@ -43,13 +43,12 @@ export default class ScreenManager extends Component<{}, State> {
 
             if (msg.value) {
                 boardData.output.values[msg.addr] = msg.value;
+                boardData.output.owner[msg.addr] = DimmerOwnership.Parked;
             }
 
             if (msg.alias) {
                 boardData.dimmers.names[msg.addr] = msg.alias;
             }
-
-            boardData.output.owner[msg.addr] = DimmerOwnership.Parked;
 
             this.setState({ boardData });
         });
@@ -57,7 +56,14 @@ export default class ScreenManager extends Component<{}, State> {
         this.context.msgBus.subscribe<MSG_UNPARK_DIMMER>(MSG_UNPARK_DIMMER, (msg) => {
             const boardData = this.state.boardData;
             boardData.output.owner[msg.addr] = DimmerOwnership.Relinquished;
+            boardData.output.values[msg.addr] = 0;
             this.setState({ boardData });
+        });
+
+        this.context.msgBus.subscribe<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, msg => {
+            const boardData = this.state.boardData;
+            boardData.channels.fixtures[msg.addr] = FixtureUtils.createFromDescriptor(msg.desc);
+            this.setState( { boardData });
         });
     }
 
@@ -82,12 +88,14 @@ export default class ScreenManager extends Component<{}, State> {
         switch(type) {
             case 'Dimmers':
                 elm = <DimmersWindow
+                    msgBus={this.context.msgBus}
                     outputData={this.state.boardData.output}
                     dimmerData={this.state.boardData.dimmers}
                 />;
                 break;
             case 'Channels':
                 elm = <ChannelsWindow
+                    msgBus={this.context.msgBus}
                     channelData={this.state.boardData.channels}
                 />;
                 break;

@@ -1,9 +1,8 @@
 import { HTTP } from './Util/HTTP';
 import { BoardData } from 'Common/BoardData';
 import MessageBus from './MessageBus';
-import { MSG_ASSIGN_FIXTURE, MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from './Messages';
+import { MSG_ASSIGN_FIXTURE, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from './Messages';
 import { AssignFixturePayload, SetDimmerPayload, SetParkPayload } from '../Common/Networking/Payloads/Client';
-import { FixtureType } from '../Common/Fixtures/FixtureType';
 
 export module API {
 	export function Status(): Promise<any> {
@@ -33,7 +32,7 @@ export module API {
 		return HTTP.Post(`/park`, payload);
 	}
 
-	export function AssignFixture(addr: number, type: FixtureType): Promise<any> {
+	export function AssignFixture(addr: number, type: string): Promise<any> {
 		const payload: AssignFixturePayload = { addr, type };
 		return HTTP.Post(`/channel/assign`, payload);
 	}
@@ -46,11 +45,11 @@ export module API {
 		});
 
 		msgBus.subscribe<MSG_UNPARK_DIMMER>(MSG_UNPARK_DIMMER, msg => {
-			UnparkDimmer(msg.addr).catch(reason => console.error(`Error unparking dimmer (${reason.toString()}`));
+			UnparkDimmer(msg.addr).catch(reason => console.error(`Error unparking dimmer (${reason.toString()})`));
 		});
 
 		msgBus.subscribe<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, msg => {
-
+			AssignFixture(msg.addr, msg.desc.name).catch(reason => console.error(`Error assigning fixture (${reason.toString()})`))
 		});
 	}
 }

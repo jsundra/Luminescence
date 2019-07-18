@@ -1,5 +1,6 @@
-import { FixtureType } from '../Common/Fixtures/FixtureType';
+import { FixtureDescriptor } from '../Common/Fixtures/Types';
 
+// Dimmers
 export const MSG_UPDATE_DIMMER = 'MSG_UPDATE_DIMMER';
 export interface MSG_UPDATE_DIMMER {
     addr: number;
@@ -12,8 +13,15 @@ export interface MSG_UNPARK_DIMMER {
     addr: number;
 }
 
+// Channels
 export const MSG_ASSIGN_FIXTURE = 'MSG_ASSIGN_FIXTURE';
 export interface MSG_ASSIGN_FIXTURE {
     addr: number;
-    type: FixtureType;
+    desc: FixtureDescriptor;
+}
+
+export const MSG_UPDATE_FIXTURE = 'MSG_UPDATE_FIXTURE';
+export interface MSG_UPDATE_FIXTURE {
+    addr: number;
+    value: number[];
 }

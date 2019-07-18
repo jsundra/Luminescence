@@ -4,11 +4,14 @@ import { Component } from 'react';
 
 export type SingleChannelProps = {
     id: number;
+    componentLabel: string;
     sliderVal: number;
     sliderLabel?: string;
 
+    sliderClass?: string;
+
     onSliderChange: (id: number, val: number) => void;
-    onNameChange: (id: number, name: string) => void;
+    onNameChange?: (id: number, name: string) => void;
 };
 
 export type SingleChannelState = {
@@ -28,9 +31,9 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
     public render() {
         return (
             <div className={'luminescence-singlechannel'} onTouchMove={e => e.preventDefault()}>
-                <div>{this.props.id + 1}</div>
+                <div>{this.props.componentLabel}</div>
                 <Slider
-                    className={'slider'}
+                    className={'slider ' + (this.props.sliderClass || '')}
                     min={0}
                     max={100}
                     stepSize={0.25}
@@ -43,7 +46,8 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                         this.props.onSliderChange(this.props.id, value);
                     }}
                 />
-                <input className="bp3-input .modifier"
+                {this.props.onNameChange &&
+                <input className="bp3-input"
                        type="text"
                        dir="auto"
                        defaultValue={this.props.sliderLabel}
@@ -53,7 +57,7 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                                this.props.onNameChange(this.props.id, newText);
                            }
                        }}
-                />
+                />}
             </div>
         );
     }

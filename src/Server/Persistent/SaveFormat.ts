@@ -47,7 +47,7 @@ export default class PersistentBoardData implements IPersistentBoardData {
 
 
             this.channels[addr] = {
-                type: fixture.type,
+                type: fixture.descriptor.name,
                 alias: fixture.alias,
             }
         }

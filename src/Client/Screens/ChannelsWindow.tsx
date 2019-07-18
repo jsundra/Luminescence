@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { ChannelData } from 'Common/BoardData';
 import { Menu, MenuItem, Popover } from '@blueprintjs/core';
-import { BaseWindow } from './BaseWindow';
-import { AllFixtures, FixtureType } from 'Common/Fixtures/FixtureType';
-import { SingleChannel } from '../Components/SingleChannel';
-import { MSG_ASSIGN_FIXTURE } from "src/Client/Messages";
-interface Props {
+import { BaseProps, BaseWindow } from './BaseWindow';
+import { AllFixtureTypes, FixtureDescriptor } from 'Common/Fixtures/Types';
+import FixtureComponent from '../Components/FixtureComponent';
+import { MSG_ASSIGN_FIXTURE } from '../Messages';
+
+interface Props extends BaseProps {
     channelData: ChannelData;
 }
 
@@ -15,10 +16,35 @@ interface State {
 
 export default class ChannelsWindow extends BaseWindow<Props, State> {
 
-    private addFixture(type: FixtureType): void {
-        // this.context.msgBus.dispatch<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, {
-        //     addr:
-        // })
+    public constructor(props: never) {
+        super(props);
+    }
+
+    private addFixture(name: string): void {
+
+        let desc: FixtureDescriptor;
+        for (const entry of AllFixtureTypes) {
+            if (entry.name == name) {
+                desc = entry;
+                break;
+            }
+        }
+        if (!desc) throw Error(`Trying to add unknown fixture: ${name}`);
+
+        const fixtureKeys = Object.keys(this.props.channelData.fixtures);
+        let nextAddr: number;
+
+        if (fixtureKeys.length === 0) {
+            nextAddr = 1;
+        } else {
+            const lastFixtureAddr = Number.parseInt(fixtureKeys[fixtureKeys.length - 1]);
+            nextAddr = this.props.channelData.fixtures[lastFixtureAddr].stride;
+        }
+
+        this.props.msgBus.dispatch<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, {
+            addr: nextAddr,
+            desc
+        });
     }
 
     private listFixtures(): JSX.Element[] {
@@ -27,17 +53,7 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
 
         for (const addr in channelData.fixtures) {
             const fixture = channelData.fixtures[addr];
-            switch (fixture.type) {
-                case 'Single Dimmer':
-                    children.push(<SingleChannel
-                        key={addr}
-                        // @ts-ignore
-                        id={addr}
-                        sliderVal={}
-                        onSliderChange={}
-                        onNameChange={}
-                    />);
-            }
+            children.push(<FixtureComponent fixture={fixture}/>)
         }
 
         return children;
@@ -46,15 +62,15 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
     private showNewButton(): JSX.Element {
 
         const menuItems = [];
-        for (const type of AllFixtures) {
-            menuItems.push(<MenuItem text={type} />)
+        for (const type of AllFixtureTypes) {
+            menuItems.push(<MenuItem text={type.name} />)
         }
 
         return (
             <Popover
                 content={<Menu>{menuItems}</Menu>}
                 position={'bottom'}
-                onClose={event => this.addFixture((event.target as HTMLInputElement).innerText as FixtureType)}
+                onClose={event => this.addFixture((event.target as HTMLInputElement).innerText)}
             >
                 <div className='luminescence-controlgroup clickable'
 

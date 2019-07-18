@@ -11,6 +11,7 @@ import FileSync from './Persistent/FileSync';
 import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { StatusPayload } from 'Common/Networking/Payloads/Server';
 import { AssignFixturePayload, SetDimmerPayload, SetParkPayload } from 'Common/Networking/Payloads/Client';
+import { FixtureUtils } from '../Common/Fixtures/FixtureUtils';
 
 export default class Luminescence {
 
@@ -104,7 +105,11 @@ export default class Luminescence {
                 switch (req.params.action) {
                     case 'assign':
                         const payload = getOrThrow<AssignFixturePayload>(req.body, ['addr', 'type']);
-                        this._controller.channels.assignFixture(payload.addr, payload.type);
+                        console.log('Assigning fixture: ' + payload);
+                        this._controller.channels.assignFixture(payload.addr, FixtureUtils.descriptorFromName(payload.type));
+                        break;
+                    case 'update':
+
                         break;
                     default:
                         res.status(400).send({error: 'Unknown action.'});
@@ -145,6 +150,7 @@ export default class Luminescence {
             for (const Adapter of this.DMX_ADAPTERS) {
                 if (device.deviceDescriptor.idVendor == Adapter.VENDOR_ID
                     && device.deviceDescriptor.idProduct == Adapter.PRODUCT_ID) {
+                    console.log(`Adapter found: ${Adapter.NAME}`);
                     this.setAdapter(new Adapter(device));
                     return;
                 }

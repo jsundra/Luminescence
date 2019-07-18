@@ -1,14 +1,15 @@
 import { Component } from 'react';
 import { ContextInstance, RootContext } from "../RootContext";
+import MessageBus from '../MessageBus';
 
-export abstract class BaseWindow<T, K> extends Component<T, K> {
+export interface BaseProps {
+    msgBus: MessageBus;
+}
 
-    public static contentType = ContextInstance;
-    public context: RootContext;
+export abstract class BaseWindow<T extends BaseProps, K> extends Component<T, K> {
 
     public constructor(props: any) {
         super(props);
         this.state = {} as any;
     }
-
 }

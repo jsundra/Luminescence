@@ -39,10 +39,15 @@ h3 {
 
 .luminescence-controlgroup {
     display: inline-block;
+		text-align: center;
 	  background-color: #30404d;
 	  border: solid #30404d;
 	  border-radius: 5px;
 	  margin: 5px;
+}
+
+.bp3-input {
+	text-align: center;
 }
 
 /* SingleChannel */
@@ -52,6 +57,7 @@ h3 {
 }
 
 .luminescence-singlechannel {
+	display: inline-block;
 	max-width: 100px;
 	margin: 5px;
 }
@@ -116,4 +122,8 @@ h3 {
 
 .overlay {
     text-align: center;
+}
+
+.hue-slider .bp3-slider-track {
+	background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
 }

@@ -1,4 +1,4 @@
-import { FixtureType } from 'Common/Fixtures/FixtureType';
+import { FixtureDescriptor, FixtureModes } from 'Common/Fixtures/Types';
 
 type ChangeHandler = () => void;
 
@@ -42,7 +42,7 @@ export class BoardData {
 
 export enum DimmerOwnership {
     Parked = 0,
-    Focus = 1,
+    Focus,
     None,
     Relinquished
 }
@@ -65,10 +65,17 @@ export class ChannelData {
     fixtures: {[index: number]: Fixture} = {};
 }
 
-export interface Fixture {
-    readonly type: FixtureType;
-    readonly stride: number;
-    alias: string;
+export class Fixture {
+    public readonly descriptor: FixtureDescriptor;
+
+    public stride: number;
+    public mode: FixtureModes;
+    public alias: string;
+
+    constructor(descriptor: FixtureDescriptor, stride: number) {
+        this.descriptor = descriptor;
+        this.stride = stride;
+    }
 }
 
 export class PatchData {
