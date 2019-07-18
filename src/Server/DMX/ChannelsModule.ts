@@ -15,9 +15,18 @@ export default class ChannelsModule extends BoardModule {
 
     public assignFixture(address: number, desc: FixtureDescriptor): void {
         this._boardData.channels.fixtures[address] = FixtureUtils.createFromDescriptor(desc);
+        this._boardData.markDirty();
     }
 
-    public updateFixture(channel: number, values: number[]): void {
-        this._boardData.channels.values.fillRange(channel, values);
+    public setAlias(address: number, alias: string): void {
+        this._boardData.channels.fixtures[address].alias = alias;
+        this._boardData.markDirty();
+    }
+
+    public setLevels(address: number, values: number[]): void {
+        for (let i = 0; i < values.length; i++) {
+            this._boardData.channels.values[address + i] = values[i];
+        }
+        this._boardData.markDirty();
     }
 }

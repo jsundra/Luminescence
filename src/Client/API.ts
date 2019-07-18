@@ -1,8 +1,13 @@
 import { HTTP } from './Util/HTTP';
 import { BoardData } from 'Common/BoardData';
 import MessageBus from './MessageBus';
-import { MSG_ASSIGN_FIXTURE, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from './Messages';
-import { AssignFixturePayload, SetDimmerPayload, SetParkPayload } from '../Common/Networking/Payloads/Client';
+import { MSG_ASSIGN_FIXTURE, MSG_SET_FIXTURE, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from './Messages';
+import {
+    AssignFixturePayload,
+    SetDimmerPayload,
+    SetFixturePayload,
+    SetParkPayload
+} from 'Common/Networking/Payloads/Client';
 
 export module API {
 	export function Status(): Promise<any> {
@@ -16,10 +21,7 @@ export module API {
 	export function SetDimmer(addr: number, level: number = -1, name: string = null): Promise<any> {
 		let url = `/dimmer`;
 
-		// TODO: Type check this!
-		const payload: SetDimmerPayload = {
-			addr: addr
-		};
+		const payload: SetDimmerPayload = { addr };
 
 		if (level > -1) payload.intensity = level;
         if (name !== null) payload.alias = name;
@@ -37,6 +39,15 @@ export module API {
 		return HTTP.Post(`/channel/assign`, payload);
 	}
 
+	export function SetFixture(addr: number, intensities: number[] = null, alias: string = null): Promise<any> {
+		const payload: SetFixturePayload = { addr };
+
+		if (intensities) payload.intensities = intensities;
+		if (alias) payload.alias = alias;
+
+		return HTTP.Post(`/channel/set`, payload);
+	}
+
 	export function bindMessageBus(msgBus: MessageBus): void {
 		msgBus.subscribe<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, msg => {
 			SetDimmer(msg.addr, msg.value, msg.alias).catch(reason =>
@@ -50,6 +61,10 @@ export module API {
 
 		msgBus.subscribe<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, msg => {
 			AssignFixture(msg.addr, msg.desc.name).catch(reason => console.error(`Error assigning fixture (${reason.toString()})`))
+		});
+
+		msgBus.subscribe<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, msg => {
+			SetFixture(msg.addr, msg.intensities, msg.alias).catch(reason => console.error(`Error setting fixture values.`));
 		});
 	}
 }

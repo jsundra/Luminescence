@@ -4,7 +4,7 @@ import { ScreenTypes } from './Screens/ScreenTypes';
 import { Mosaic, MosaicBranch, MosaicWindow } from 'react-mosaic-component';
 import { BoardData, DimmerOwnership } from '../Common/BoardData';
 import { API } from './API';
-import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_ASSIGN_FIXTURE } from './Messages';
+import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_ASSIGN_FIXTURE, MSG_SET_FIXTURE } from './Messages';
 import { ContextInstance, RootContext } from './RootContext';
 import DimmersWindow from './Screens/DimmersWindow';
 import ChannelsWindow from './Screens/ChannelsWindow';
@@ -65,6 +65,23 @@ export default class ScreenManager extends Component<{}, State> {
             boardData.channels.fixtures[msg.addr] = FixtureUtils.createFromDescriptor(msg.desc);
             this.setState( { boardData });
         });
+
+        this.context.msgBus.subscribe<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, msg => {
+            const boardData = this.state.boardData;
+            let startAddr = msg.addr;
+
+            if (msg.intensities) {
+                for (const intensity of msg.intensities) {
+                    boardData.channels.values[startAddr++] = intensity;
+                }
+            }
+
+            if (msg.alias !== undefined) {
+                boardData.channels.fixtures[msg.addr].alias = msg.alias;
+            }
+
+            this.setState({ boardData });
+        })
     }
 
     public render(): ReactNode {

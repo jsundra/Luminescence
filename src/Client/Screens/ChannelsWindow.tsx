@@ -4,7 +4,7 @@ import { Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { BaseProps, BaseWindow } from './BaseWindow';
 import { AllFixtureTypes, FixtureDescriptor } from 'Common/Fixtures/Types';
 import FixtureComponent from '../Components/FixtureComponent';
-import { MSG_ASSIGN_FIXTURE } from '../Messages';
+import { MSG_ASSIGN_FIXTURE, MSG_SET_FIXTURE } from '../Messages';
 
 interface Props extends BaseProps {
     channelData: ChannelData;
@@ -38,7 +38,7 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
             nextAddr = 1;
         } else {
             const lastFixtureAddr = Number.parseInt(fixtureKeys[fixtureKeys.length - 1]);
-            nextAddr = this.props.channelData.fixtures[lastFixtureAddr].stride;
+            nextAddr = lastFixtureAddr + this.props.channelData.fixtures[lastFixtureAddr].stride;
         }
 
         this.props.msgBus.dispatch<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, {
@@ -53,7 +53,23 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
 
         for (const addr in channelData.fixtures) {
             const fixture = channelData.fixtures[addr];
-            children.push(<FixtureComponent fixture={fixture}/>)
+            children.push(<FixtureComponent
+                fixture={fixture}
+                addr={addr}
+                intensities={channelData.values.slice(Number.parseInt(addr), fixture.stride)}
+                onValueChange={(addr, intensities) => {
+                    this.props.msgBus.dispatch<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, {
+                        addr,
+                        intensities
+                    })
+                }}
+                onAliasChange={(addr, alias) => {
+                    this.props.msgBus.dispatch<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, {
+                        addr,
+                        alias
+                    });
+                }}
+            />)
         }
 
         return children;

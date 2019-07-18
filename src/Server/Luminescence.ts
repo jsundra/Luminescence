@@ -10,7 +10,12 @@ import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
 import FileSync from './Persistent/FileSync';
 import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { StatusPayload } from 'Common/Networking/Payloads/Server';
-import { AssignFixturePayload, SetDimmerPayload, SetParkPayload } from 'Common/Networking/Payloads/Client';
+import {
+    AssignFixturePayload,
+    SetDimmerPayload,
+    SetFixturePayload,
+    SetParkPayload
+} from 'Common/Networking/Payloads/Client';
 import { FixtureUtils } from '../Common/Fixtures/FixtureUtils';
 
 export default class Luminescence {
@@ -104,15 +109,22 @@ export default class Luminescence {
                 }
                 switch (req.params.action) {
                     case 'assign':
+                    {
                         const payload = getOrThrow<AssignFixturePayload>(req.body, ['addr', 'type']);
-                        console.log('Assigning fixture: ' + payload);
                         this._controller.channels.assignFixture(payload.addr, FixtureUtils.descriptorFromName(payload.type));
                         break;
-                    case 'update':
+                    }
+                    case 'set':
+                    {
+                        const payload = getOrThrow<SetFixturePayload>(req.body, ['addr'], ['intensities', 'alias']);
 
+                        if (payload.intensities) this._controller.channels.setLevels(payload.addr, payload.intensities);
+                        if (payload.alias) this._controller.channels.setAlias(payload.addr, payload.alias);
                         break;
+                    }
                     default:
-                        res.status(400).send({error: 'Unknown action.'});
+                        console.log(`Unknown channel action: ${req.params.action}`);
+                        res.status(400).send({ error: 'Unknown action.' });
                         return;
                 }
                 res.sendStatus(204);

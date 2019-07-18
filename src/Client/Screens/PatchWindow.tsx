@@ -66,7 +66,7 @@ export default class PatchWindow extends Component<{}, State> {
 						defaultValue={(this.state.overrides[addr] || 0).toString()}
 						ref={(element) => {this.slider[addr] = element}}
 						onInput={(e) => {
-							this.onSetDimmer(addr, this.slider[addr].value);
+							this.onSetDimmer(addr, this.slider[addr].intensities);
 						}}
 					/>
 					<span>{this.state.overrides[addr] || 0}</span>
@@ -77,7 +77,7 @@ export default class PatchWindow extends Component<{}, State> {
 					defaultValue={this.state.names[addr] || ''}
 					ref={(element) => {this.textInput[addr] = element}}
 					onBlur={(e) => {
-						this.onNameDimmer(addr, this.textInput[addr].value);
+						this.onNameDimmer(addr, this.textInput[addr].intensities);
 					}}
 				/>
 			);

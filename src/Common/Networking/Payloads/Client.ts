@@ -16,7 +16,8 @@ export interface AssignFixturePayload extends Payload {
     type: string;
 }
 
-export interface UpdateFixturePayload extends Payload {
+export interface SetFixturePayload extends Payload {
     addr: number;
-    intensities: number[];
+    intensities?: number[];
+    alias?: string;
 }

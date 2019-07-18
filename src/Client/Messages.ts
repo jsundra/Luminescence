@@ -20,8 +20,9 @@ export interface MSG_ASSIGN_FIXTURE {
     desc: FixtureDescriptor;
 }
 
-export const MSG_UPDATE_FIXTURE = 'MSG_UPDATE_FIXTURE';
-export interface MSG_UPDATE_FIXTURE {
+export const MSG_SET_FIXTURE = 'MSG_UPDATE_FIXTURE';
+export interface MSG_SET_FIXTURE {
     addr: number;
-    value: number[];
+    intensities?: number[];
+    alias?: string;
 }
