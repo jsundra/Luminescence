@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { ChannelData } from 'Common/BoardData';
-import { Menu, MenuItem, Overlay, Popover } from '@blueprintjs/core';
+import { Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { BaseWindow } from './BaseWindow';
-import { AllFixtures, FixtureType } from '../../Common/Fixtures/FixtureType';
+import { AllFixtures, FixtureType } from 'Common/Fixtures/FixtureType';
 import { SingleChannel } from '../Components/SingleChannel';
+import { MSG_ASSIGN_FIXTURE } from "src/Client/Messages";
 interface Props {
     channelData: ChannelData;
 }
@@ -15,7 +16,9 @@ interface State {
 export default class ChannelsWindow extends BaseWindow<Props, State> {
 
     private addFixture(type: FixtureType): void {
-
+        // this.context.msgBus.dispatch<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, {
+        //     addr:
+        // })
     }
 
     private listFixtures(): JSX.Element[] {
@@ -64,12 +67,6 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
 
     public render() {
         return ([
-            /*<Overlay
-                className='overlay'
-                isOpen={this.state.fixtureDialog}
-                onClose={() => this.setState({ fixtureDialog: false })}
-                onClosed={(elm) => console.log(elm)}
-            >{this.newFixtureDialog()}</Overlay>,*/
             <div className='flex-parent'>
                 <div className='flex'
                      onClick={e => e.preventDefault()}

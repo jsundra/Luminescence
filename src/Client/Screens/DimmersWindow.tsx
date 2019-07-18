@@ -3,7 +3,8 @@ import { Component } from 'react';
 import { SingleChannel } from '../Components/SingleChannel';
 import { DimmerData, DimmerOwnership, OutputData } from '../../Common/BoardData';
 import { ContextInstance, RootContext } from '../RootContext';
-import { MSG_UPDATE_DIMMER, UNPARK_DIMMER, UPDATE_DIMMER } from '../Messages';
+import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from '../Messages';
+import {BaseWindow} from "./BaseWindow";
 
 interface Props {
     outputData: OutputData;
@@ -14,7 +15,7 @@ interface State {
 
 }
 
-export default class DimmersWindow extends Component<Props, State> {
+export default class DimmersWindow extends BaseWindow<Props, State> {
 
     public static contextType = ContextInstance;
     public context: RootContext;
@@ -46,7 +47,7 @@ export default class DimmersWindow extends Component<Props, State> {
                         className={'unpark'}
                         src={`/img/icon/unlock.png`}
                         onClick={() => {
-                            this.context.msgBus.dispatch<UNPARK_DIMMER>(UNPARK_DIMMER, {
+                            this.context.msgBus.dispatch<MSG_UNPARK_DIMMER>(MSG_UNPARK_DIMMER, {
                                 addr: index
                             });
                         }}
@@ -56,13 +57,13 @@ export default class DimmersWindow extends Component<Props, State> {
                         sliderVal={outputData.values[i] || 0}
                         sliderLabel={dimmerData.names[i] || ''}
                         onSliderChange={(id, val) => {
-                            this.context.msgBus.dispatch<UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {
+                            this.context.msgBus.dispatch<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {
                                 addr: id,
                                 value: val
                             });
                         }}
                         onNameChange={(id, name) => {
-                            this.context.msgBus.dispatch<UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {
+                            this.context.msgBus.dispatch<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {
                                 addr: id,
                                 alias: name
                             });

@@ -32,7 +32,7 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                 <Slider
                     className={'slider'}
                     min={0}
-                    max={255}
+                    max={100}
                     stepSize={0.25}
                     labelStepSize={50}
                     labelRenderer={false} //{(val) => `${Math.round(val)}%`}

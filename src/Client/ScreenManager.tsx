@@ -5,7 +5,7 @@ import { Mosaic, MosaicBranch, MosaicWindow } from 'react-mosaic-component';
 import DimmersWindow from './Screens/DimmersWindow';
 import { BoardData, DimmerOwnership } from '../Common/BoardData';
 import { API } from './API';
-import { MSG_UPDATE_DIMMER, UNPARK_DIMMER, UPDATE_DIMMER } from './Messages';
+import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from './Messages';
 import { ContextInstance, RootContext } from './RootContext';
 import ChannelsWindow from './Screens/ChannelsWindow';
 
@@ -38,7 +38,7 @@ export default class ScreenManager extends Component<{}, State> {
 
         // TODO: Get updated state from server!!!
 
-        this.context.msgBus.subscribe<UPDATE_DIMMER>(MSG_UPDATE_DIMMER, (msg) => {
+        this.context.msgBus.subscribe<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, (msg) => {
             const boardData = this.state.boardData;
 
             if (msg.value) {
@@ -54,7 +54,7 @@ export default class ScreenManager extends Component<{}, State> {
             this.setState({ boardData });
         });
 
-        this.context.msgBus.subscribe<UNPARK_DIMMER>(UNPARK_DIMMER, (msg) => {
+        this.context.msgBus.subscribe<MSG_UNPARK_DIMMER>(MSG_UNPARK_DIMMER, (msg) => {
             const boardData = this.state.boardData;
             boardData.output.owner[msg.addr] = DimmerOwnership.Relinquished;
             this.setState({ boardData });
