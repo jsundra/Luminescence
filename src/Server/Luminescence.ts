@@ -146,6 +146,7 @@ export default class Luminescence {
                 if (device.deviceDescriptor.idVendor == Adapter.VENDOR_ID
                     && device.deviceDescriptor.idProduct == Adapter.PRODUCT_ID) {
                     this.setAdapter(new Adapter(device));
+                    return;
                 }
             }
             console.log('USB attached. Not recognized as a DMX adapter.');
