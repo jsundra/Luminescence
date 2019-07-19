@@ -40,7 +40,7 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                     labelStepSize={50}
                     labelRenderer={false} //{(val) => `${Math.round(val)}%`}
                     vertical={true}
-                    value={this.props.sliderVal}
+                    value={this.props.sliderVal || 0}
                     onChange={(value) => {
                         // this.setState({value});
                         this.props.onSliderChange(this.props.id, value);

@@ -1,8 +1,9 @@
 import { Component } from 'react';
 import { FixtureDisplays } from 'Common/Fixtures/Types';
 import * as React from 'react';
-import { Fixture } from '../../Common/BoardData';
+import { Fixture } from 'Common/BoardData';
 import { SingleChannel } from './SingleChannel';
+import { ColorUtil } from "../Util/ColorUtil";
 
 export type Props = {
     addr: number | string;
@@ -46,30 +47,64 @@ export default class FixtureComponent extends Component<Props, State> {
         const fixture = this.props.fixture;
 
         // @ts-ignore
-        const components = fixture.descriptor.components[fixture.mode];
-        for (const i in components) {
-            const component = components[i];
-            children.push(this.addComponent(component, this.props.addr as number, Number.parseInt(i)));
+        const controls = fixture.descriptor.components[fixture.mode];
+        let addrOffset = 0;
+
+        for (const control of controls) {
+            const component = this.addComponent(control, this.props.addr as number, addrOffset);
+            addrOffset += component.stride;
+            children.push(component.elm);
         }
 
         return children;
     }
 
-    private addComponent(display: FixtureDisplays, addr: number, offset: number): JSX.Element {
+    private addComponent(display: FixtureDisplays, addr: number, offset: number): { elm: JSX.Element, stride: number } {
         switch(display) {
             case ' ':
-                return <SingleChannel id={offset} componentLabel={`${addr}`} sliderVal={0} onSliderChange={() => {}} />
+                return {
+                    elm: <SingleChannel
+                        id={offset}
+                        componentLabel={`${addr}`}
+                        sliderVal={this.props.intensities[offset]}
+                        onSliderChange={this.onSliderChange.bind(this)}
+                    />,
+                    stride: 1
+                };
             case 'RGB':
-                return <SingleChannel id={offset} sliderClass={'hue-slider'} componentLabel='RGB' sliderVal={0} onSliderChange={() => {}} />
+                const hue: number = this.props.intensities[offset];
+                return {
+                    elm: <SingleChannel
+                        id={offset}
+                        sliderClass={'hue-slider'}
+                        componentLabel='RGB'
+                        sliderVal={hue}
+                        onSliderChange={this.onColorChange.bind(this)}
+                    />,
+                    stride: 3
+                }
             case 'A':
             case 'W':
             case 'UV':
-                return <SingleChannel id={offset} componentLabel={display} sliderVal={0} onSliderChange={() => {}} />
+                return {
+                    elm: <SingleChannel
+                        id={offset}
+                        componentLabel={display}
+                        sliderVal={this.props.intensities[offset]}
+                        onSliderChange={this.onSliderChange.bind(this)}
+                    />,
+                    stride: 1
+                };
         }
     }
 
-    private onColorChange(offset: number, color: any): void {
-        // TODO:
+    private onColorChange(offset: number, sliderVal: number): void {
+        const color = ColorUtil.SliderToRGB(sliderVal);
+
+        this._values[offset] = color.r * 100;
+        this._values[offset+1] = color.g * 100;
+        this._values[offset+2] = color.b * 100;
+        this.props.onValueChange(this.props.addr as number, this._values);
     }
 
     private onSliderChange(offset: number, intensity: number): void {

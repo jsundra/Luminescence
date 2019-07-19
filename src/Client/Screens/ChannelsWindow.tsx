@@ -53,10 +53,12 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
 
         for (const addr in channelData.fixtures) {
             const fixture = channelData.fixtures[addr];
+            const addrNum = Number.parseInt(addr);
+
             children.push(<FixtureComponent
                 fixture={fixture}
                 addr={addr}
-                intensities={channelData.values.slice(Number.parseInt(addr), fixture.stride)}
+                intensities={channelData.values.slice(addrNum, addrNum + fixture.stride)}
                 onValueChange={(addr, intensities) => {
                     this.props.msgBus.dispatch<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, {
                         addr,

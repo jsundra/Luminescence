@@ -45,11 +45,11 @@ export default class PersistentBoardData implements IPersistentBoardData {
         // Channels
         for (const addr in data.channels.fixtures) {
             const fixture = data.channels.fixtures[addr];
-
+            const addrNum = Number.parseInt(addr);
             this.channels[addr] = {
                 type: fixture.descriptor.name,
                 alias: fixture.alias,
-                values: data.channels.values.slice(Number.parseInt(addr), fixture.stride)
+                values: data.channels.values.slice(addrNum, addrNum + fixture.stride)
             }
         }
     }
