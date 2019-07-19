@@ -29,13 +29,14 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
     }
 
     public render() {
+        console.log(this.props.sliderVal);
         return (
             <div className={'luminescence-singlechannel'} onTouchMove={e => e.preventDefault()}>
                 <div>{this.props.componentLabel}</div>
                 <Slider
                     className={'slider ' + (this.props.sliderClass || '')}
                     min={0}
-                    max={100}
+                    max={this.props.sliderClass ? 100 : 255}
                     stepSize={0.25}
                     labelStepSize={50}
                     labelRenderer={false} //{(val) => `${Math.round(val)}%`}

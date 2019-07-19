@@ -48,14 +48,12 @@ export default class DMXController {
 
     // TODO: Make this safe so nothing can pass `relinquish` maliciously?
     public setDimmerValue(addr: number, ownership: DimmerOwnership, intensity?: number) {
-        if (intensity) intensity = intensity * 2.55; // Convert 0-100 -> 0-255
-
         if (ownership == DimmerOwnership.Relinquished) {
             // Find a new owner, if any.
             let updated: boolean;
             for (const module of this._modules) {
                 const intensity = module.getOutput(addr);
-                if (!intensity) continue;
+                if (intensity == undefined || intensity == null) continue;
 
                 this._data.output.owner[addr] = module.getOwnershipLevel();
                 this._data.output.values[addr] = intensity;
@@ -67,13 +65,12 @@ export default class DMXController {
                 this._data.output.owner[addr] = DimmerOwnership.None;
                 this._data.output.values[addr] = 0;
             }
-
         } else {
             // Set, if available.
             const curOwner = this._data.output.owner[addr];
-            if (curOwner < ownership) return;
+            if (curOwner > ownership) return;
 
-            if (curOwner > ownership) this._data.output.owner[addr] = ownership;
+            if (curOwner < ownership) this._data.output.owner[addr] = ownership;
             this._data.output.values[addr] = intensity;
         }
     }

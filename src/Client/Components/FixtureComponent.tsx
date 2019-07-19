@@ -65,7 +65,7 @@ export default class FixtureComponent extends Component<Props, State> {
                 return {
                     elm: <SingleChannel
                         id={offset}
-                        componentLabel={`${addr}`}
+                        componentLabel={`${addr + 1}`}
                         sliderVal={this.props.intensities[offset]}
                         onSliderChange={this.onSliderChange.bind(this)}
                     />,
@@ -101,9 +101,9 @@ export default class FixtureComponent extends Component<Props, State> {
     private onColorChange(offset: number, sliderVal: number): void {
         const color = ColorUtil.SliderToRGB(sliderVal);
 
-        this._values[offset] = color.r * 100;
-        this._values[offset+1] = color.g * 100;
-        this._values[offset+2] = color.b * 100;
+        this._values[offset] = color.r * 255;
+        this._values[offset+1] = color.g * 255;
+        this._values[offset+2] = color.b * 255;
         this.props.onValueChange(this.props.addr as number, this._values);
     }
 

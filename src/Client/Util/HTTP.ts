@@ -26,16 +26,16 @@ export module HTTP {
 			const req = new XMLHttpRequest();
 
 			req.onreadystatechange = () => {
-			  if (req.readyState !== 4) return;
+				if (req.readyState !== 4) return;
 
-			  if (req.status >= 200 && req.status < 300) {
-				resolve(req.response);
-			  } else {
-				reject({
-				  status: req.status,
-				  message: req.statusText
-				});
-			  }
+				if (req.status >= 200 && req.status < 300) {
+                    resolve(JSON.parse(req.response));
+				} else {
+					reject({
+						status: req.status,
+						message: req.statusText
+					});
+				}
 			};
 			req.open('POST', url);
             req.setRequestHeader('Content-Type', 'application/json');

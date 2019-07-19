@@ -1,4 +1,11 @@
 import { FixtureDescriptor } from '../Common/Fixtures/Types';
+import { BoardData } from '../Common/BoardData';
+
+// Data Update
+export const MSG_DATA_UPDATE = 'MSG_DATA_UPDATE';
+export interface MSG_DATA_UPDATE {
+    latest: BoardData;
+}
 
 // Dimmers
 export const MSG_UPDATE_DIMMER = 'MSG_UPDATE_DIMMER';

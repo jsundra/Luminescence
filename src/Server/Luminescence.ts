@@ -9,7 +9,7 @@ import DMXAdapter from './DMX/Adapters/DMXAdapter';
 import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
 import FileSync from './Persistent/FileSync';
 import { BoardData, DimmerOwnership } from 'Common/BoardData';
-import { StatusPayload } from 'Common/Networking/Payloads/Server';
+import { DataUpdate, StatusPayload } from 'Common/Networking/Payloads/Server';
 import {
     AssignFixturePayload,
     SetDimmerPayload,
@@ -60,7 +60,7 @@ export default class Luminescence {
 
         // setInterval(() => {
         //     const dim = Math.round(Math.random() * 72) + 49;
-        //     const val = this._data.dimmers.values[dim] === 255 ? 0 : 255;
+        //     const val = this._data.dimmers.values[dim] === 255 ? 0 : 255
         //     console.log(dim, val);
         //     this._controller.dimmers.setLevel(dim, [0]);
         // }, 50);
@@ -88,7 +88,9 @@ export default class Luminescence {
                 if (payload.intensity !== undefined) this._controller.dimmers.setLevel(payload.addr, payload.intensity);
                 if (payload.alias !== undefined) this._controller.dimmers.setAlias(payload.addr, payload.alias);
 
-                res.sendStatus(204);
+                Luminescence.sendResponse<DataUpdate>(res, {
+                    latest: this._data
+                });
             }
         );
 
@@ -98,7 +100,9 @@ export default class Luminescence {
 
                 this._controller.dimmers.setLevel(payload.addr, payload.intensity);
 
-                res.sendStatus(204);
+                Luminescence.sendResponse<DataUpdate>(res, {
+                    latest: this._data
+                });
             }
         );
 
@@ -127,7 +131,10 @@ export default class Luminescence {
                         res.status(400).send({ error: 'Unknown action.' });
                         return;
                 }
-                res.sendStatus(204);
+
+                Luminescence.sendResponse<DataUpdate>(res, {
+                    latest: this._data
+                });
             })
         );
     }

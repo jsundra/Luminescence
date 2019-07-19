@@ -1,5 +1,5 @@
 import BoardModule from './BoardModule';
-import { DimmerOwnership, Fixture } from '../../Common/BoardData';
+import { DimmerOwnership } from '../../Common/BoardData';
 import { FixtureDescriptor } from '../../Common/Fixtures/Types';
 import { FixtureUtils } from '../../Common/Fixtures/FixtureUtils';
 
@@ -25,7 +25,9 @@ export default class ChannelsModule extends BoardModule {
 
     public setLevels(address: number, values: number[]): void {
         for (let i = 0; i < values.length; i++) {
-            this._boardData.channels.values[address + i] = values[i];
+            const value = values[i];
+            this._boardData.channels.values[address + i] = value; // TODO: Remove +1 with refactor!
+            this._dmxController.setDimmerValue(address + i + 1, DimmerOwnership.Focus, value)
         }
         this._boardData.markDirty();
     }

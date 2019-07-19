@@ -41,10 +41,10 @@ export class BoardData {
 }
 
 export enum DimmerOwnership {
-    Parked = 0,
-    Focus,
+    Relinquished = 0,
     None,
-    Relinquished
+    Focus,
+    Parked,
 }
 
 export class OutputData {

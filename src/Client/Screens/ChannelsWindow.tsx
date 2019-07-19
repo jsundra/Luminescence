@@ -32,11 +32,9 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
         if (!desc) throw Error(`Trying to add unknown fixture: ${name}`);
 
         const fixtureKeys = Object.keys(this.props.channelData.fixtures);
-        let nextAddr: number;
+        let nextAddr: number = 0;
 
-        if (fixtureKeys.length === 0) {
-            nextAddr = 1;
-        } else {
+        if (fixtureKeys.length > 0) {
             const lastFixtureAddr = Number.parseInt(fixtureKeys[fixtureKeys.length - 1]);
             nextAddr = lastFixtureAddr + this.props.channelData.fixtures[lastFixtureAddr].stride;
         }
@@ -51,7 +49,9 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
         const children: JSX.Element[] = [];
         const channelData = this.props.channelData;
 
-        for (const addr in channelData.fixtures) {
+        for (let addr in channelData.fixtures) {
+            addr = Number.parseInt(addr); // TODO: Remove this. Loading from JSON, channelData.fixtures is a string.
+
             const fixture = channelData.fixtures[addr];
             const addrNum = Number.parseInt(addr);
 

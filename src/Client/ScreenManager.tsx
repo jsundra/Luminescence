@@ -4,7 +4,7 @@ import { ScreenTypes } from './Screens/ScreenTypes';
 import { Mosaic, MosaicBranch, MosaicWindow } from 'react-mosaic-component';
 import { BoardData, DimmerOwnership } from '../Common/BoardData';
 import { API } from './API';
-import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_ASSIGN_FIXTURE, MSG_SET_FIXTURE } from './Messages';
+import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_ASSIGN_FIXTURE, MSG_SET_FIXTURE, MSG_DATA_UPDATE } from './Messages';
 import { ContextInstance, RootContext } from './RootContext';
 import DimmersWindow from './Screens/DimmersWindow';
 import ChannelsWindow from './Screens/ChannelsWindow';
@@ -24,7 +24,7 @@ export default class ScreenManager extends Component<{}, State> {
 
         this.state = {
             boardData: new BoardData()
-        }
+        };
     }
 
     public componentWillMount() {
@@ -34,54 +34,10 @@ export default class ScreenManager extends Component<{}, State> {
             })
             .catch(reason => {
                 console.error(`Error getting board data: ${reason}`);
-            });
-
-        // TODO: Get updated state from server!!!
-
-        this.context.msgBus.subscribe<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, (msg) => {
-            const boardData = this.state.boardData;
-
-            if (msg.value) {
-                boardData.output.values[msg.addr] = msg.value;
-                boardData.output.owner[msg.addr] = DimmerOwnership.Parked;
             }
+        );
 
-            if (msg.alias) {
-                boardData.dimmers.names[msg.addr] = msg.alias;
-            }
-
-            this.setState({ boardData });
-        });
-
-        this.context.msgBus.subscribe<MSG_UNPARK_DIMMER>(MSG_UNPARK_DIMMER, (msg) => {
-            const boardData = this.state.boardData;
-            boardData.output.owner[msg.addr] = DimmerOwnership.Relinquished;
-            boardData.output.values[msg.addr] = 0;
-            this.setState({ boardData });
-        });
-
-        this.context.msgBus.subscribe<MSG_ASSIGN_FIXTURE>(MSG_ASSIGN_FIXTURE, msg => {
-            const boardData = this.state.boardData;
-            boardData.channels.fixtures[msg.addr] = FixtureUtils.createFromDescriptor(msg.desc);
-            this.setState( { boardData });
-        });
-
-        this.context.msgBus.subscribe<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, msg => {
-            const boardData = this.state.boardData;
-            let startAddr = msg.addr;
-
-            if (msg.intensities) {
-                for (const intensity of msg.intensities) {
-                    boardData.channels.values[startAddr++] = intensity;
-                }
-            }
-
-            if (msg.alias !== undefined) {
-                boardData.channels.fixtures[msg.addr].alias = msg.alias;
-            }
-
-            this.setState({ boardData });
-        })
+        this.context.msgBus.subscribe<MSG_DATA_UPDATE>(MSG_DATA_UPDATE, data => this.setState({ boardData: data.latest }));
     }
 
     public render(): ReactNode {
