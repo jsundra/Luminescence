@@ -1,5 +1,9 @@
 import Payload from './Payload';
 
+export interface SetControlPayload extends Payload {
+    master?: number;
+}
+
 export interface SetDimmerPayload extends Payload {
     addr: number;
     intensity?: number;

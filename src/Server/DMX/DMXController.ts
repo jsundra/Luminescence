@@ -1,6 +1,6 @@
 import DMXAdapter from './Adapters/DMXAdapter';
 import SystemConfig from '../Config/SystemConfig';
-import { BoardData, DimmerOwnership } from 'Common/BoardData';
+import { BoardData, ControlData, DimmerOwnership } from 'Common/BoardData';
 import DimmersModule from './DimmersModule';
 import BoardModule from './BoardModule';
 import Timeout = NodeJS.Timeout;
@@ -15,6 +15,7 @@ export default class DMXController {
     private readonly _data: BoardData;
 
     private _adapter: DMXAdapter;
+    private _dmx: number[] = [ 0 ]; // Pad leading 0 to make things A LOT more sane, and add DMX protocol chaplaincy here.
 
     private _volatileChanges: boolean;
     private _intervalId: Timeout;
@@ -44,6 +45,11 @@ export default class DMXController {
             this._adapter.setMaxAddr(this._data.output.values.length);
             this._adapter.open();
         }
+    }
+
+    public setControl(control: keyof ControlData, value: number): void {
+        this._data.controls[control] = value;
+        this._data.markDirty();
     }
 
     // TODO: Make this safe so nothing can pass `relinquish` maliciously?
@@ -82,9 +88,16 @@ export default class DMXController {
     private update(): void {
         // TODO: Update chases
 
+        for (let i = 1; i < this._data.output.values.length; i++) {
+            const ignoreGM = this._data.output.owner[i] === DimmerOwnership.Parked;
+            this._dmx[i] = ignoreGM
+                ? this._data.output.values[i]
+                : this._data.output.values[i] * this._data.controls.master;
+        }
+
         // Send DMX
         if (this._adapter && this._data.dimmers.values.length > 0) {
-            this._adapter.sendDMX(this._data.output.values);
+            this._adapter.sendDMX(this._dmx);
         }
     }
 }

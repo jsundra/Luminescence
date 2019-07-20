@@ -11,7 +11,7 @@ import FileSync from './Persistent/FileSync';
 import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { DataUpdate, StatusPayload } from 'Common/Networking/Payloads/Server';
 import {
-    AssignFixturePayload,
+    AssignFixturePayload, SetControlPayload,
     SetDimmerPayload,
     SetFixturePayload,
     SetParkPayload
@@ -67,7 +67,7 @@ export default class Luminescence {
     }
 
     public configureEndpoints(express: Express): void {
-        express.route('/status')
+        express.route('/api/status')
             .get((req, res) => {
                 Luminescence.sendResponse<StatusPayload>(res, {
                     adapter: this._adapter ? this._adapter.constructor.name : null
@@ -75,13 +75,20 @@ export default class Luminescence {
             }
         );
 
-        express.route('/data')
+        express.route('/api/data')
             .get((req, res) => {
                 res.json(this._data);
             }
         );
 
-        express.route('/dimmer')
+        express.route('/api/controls')
+            .post((req, res) => {
+                const payload = getOrThrow<SetControlPayload>(req.body, [], ['master']);
+
+                if (payload.master) this._controller.setControl('master', payload.master);
+            });
+
+        express.route('/api/dimmer')
             .post((req, res) => {
                 const payload = getOrThrow<SetDimmerPayload>(req.body, ['addr'], ['intensity', 'alias']);
 
@@ -94,7 +101,7 @@ export default class Luminescence {
             }
         );
 
-        express.route('/park')
+        express.route('/api/park')
             .post((req, res) => {
                 const payload = getOrThrow<SetParkPayload>(req.body, ['addr'], ['intensity']);
 

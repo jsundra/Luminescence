@@ -7,6 +7,12 @@ export interface MSG_DATA_UPDATE {
     latest: BoardData;
 }
 
+// Controls
+export const MSG_CHANGE_CONTROL = 'MSG_CHANGE_CONTROL';
+export interface MSG_CHANGE_CONTROL {
+    master: number;
+}
+
 // Dimmers
 export const MSG_UPDATE_DIMMER = 'MSG_UPDATE_DIMMER';
 export interface MSG_UPDATE_DIMMER {

@@ -1,9 +1,16 @@
 import { HTTP } from './Util/HTTP';
 import { BoardData } from 'Common/BoardData';
 import MessageBus from './MessageBus';
-import { MSG_ASSIGN_FIXTURE, MSG_DATA_UPDATE, MSG_SET_FIXTURE, MSG_UNPARK_DIMMER, MSG_UPDATE_DIMMER } from './Messages';
 import {
-    AssignFixturePayload,
+    MSG_ASSIGN_FIXTURE,
+    MSG_CHANGE_CONTROL,
+    MSG_DATA_UPDATE,
+    MSG_SET_FIXTURE,
+    MSG_UNPARK_DIMMER,
+    MSG_UPDATE_DIMMER
+} from './Messages';
+import {
+    AssignFixturePayload, SetControlPayload,
     SetDimmerPayload,
     SetFixturePayload,
     SetParkPayload
@@ -12,15 +19,20 @@ import { DataUpdate } from '../Common/Networking/Payloads/Server';
 
 export module API {
 	export function Status(): Promise<any> {
-		return HTTP.Get('/status');
+		return HTTP.Get('/api/status');
 	}
 
 	export function GetBoardData(): Promise<BoardData> {
-		return HTTP.Get('/data');
+		return HTTP.Get('/api/data');
+	}
+
+	export function SetControl(control: string, value: number): Promise<DataUpdate> {
+		const payload: SetControlPayload = { [control]: value };
+		return HTTP.Post(`/api/controls`, payload);
 	}
 
 	export function SetDimmer(addr: number, level: number = -1, name: string = null): Promise<DataUpdate> {
-		let url = `/dimmer`;
+		let url = `/api/dimmer`;
 
 		const payload: SetDimmerPayload = { addr };
 
@@ -32,12 +44,12 @@ export module API {
 
 	export function UnparkDimmer(addr: number): Promise<DataUpdate> {
 		const payload: SetParkPayload = { addr };
-		return HTTP.Post(`/park`, payload);
+		return HTTP.Post(`/api/park`, payload);
 	}
 
 	export function AssignFixture(addr: number, type: string): Promise<DataUpdate> {
 		const payload: AssignFixturePayload = { addr, type };
-		return HTTP.Post(`/channel/assign`, payload);
+		return HTTP.Post(`/api/channel/assign`, payload);
 	}
 
 	export function SetFixture(addr: number, intensities: number[] = null, alias: string = null): Promise<DataUpdate> {
@@ -46,10 +58,14 @@ export module API {
 		if (intensities) payload.intensities = intensities;
 		if (alias) payload.alias = alias;
 
-		return HTTP.Post(`/channel/set`, payload);
+		return HTTP.Post(`/api/channel/set`, payload);
 	}
 
 	export function bindMessageBus(msgBus: MessageBus): void {
+		msgBus.subscribe<MSG_CHANGE_CONTROL>(MSG_CHANGE_CONTROL, msg => {
+
+		});
+
 		msgBus.subscribe<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, msg => {
 			SetDimmer(msg.addr, msg.value, msg.alias)
 				.then(data => {
