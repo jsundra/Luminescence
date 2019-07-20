@@ -86,6 +86,10 @@ export default class Luminescence {
                 const payload = getOrThrow<SetControlPayload>(req.body, [], ['master']);
 
                 if (payload.master) this._controller.setControl('master', payload.master);
+
+                Luminescence.sendResponse<DataUpdate>(res, {
+                    latest: this._data
+                });
             });
 
         express.route('/api/dimmer')
@@ -113,7 +117,7 @@ export default class Luminescence {
             }
         );
 
-        express.route(`/channel/:action`)
+        express.route(`/api/channel/:action`)
             .post(((req, res) => {
                 if (!req.params.action) {
                     res.status(400).send({error: 'Action required.'});

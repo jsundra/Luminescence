@@ -1,4 +1,4 @@
-import { BoardData } from 'Common/BoardData';
+import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { FixtureUtils } from '../../Common/Fixtures/FixtureUtils';
 
 type DimmerSave = {
@@ -57,6 +57,11 @@ export default class PersistentBoardData implements IPersistentBoardData {
     public getBoardData(): BoardData {
         const rtn = new BoardData();
 
+        // Output
+        for (const i in this.dimmers) {
+            rtn.output.owner[i] = DimmerOwnership.None;
+        }
+
         // Dimmers
         for (const i in this.dimmers) {
             const data = this.dimmers[i];
@@ -64,6 +69,7 @@ export default class PersistentBoardData implements IPersistentBoardData {
             rtn.dimmers.values[i] = data.value
         }
 
+        // Channels
         for (const i in this.channels) {
             const iNum = Number.parseInt(i);
             const data = this.channels[i];

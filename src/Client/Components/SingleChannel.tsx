@@ -10,6 +10,8 @@ export type SingleChannelProps = {
 
     sliderClass?: string;
 
+    maxValue?: number;
+
     onSliderChange: (id: number, val: number) => void;
     onNameChange?: (id: number, name: string) => void;
 };
@@ -35,8 +37,8 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                 <Slider
                     className={'slider ' + (this.props.sliderClass || '')}
                     min={0}
-                    max={this.props.sliderClass ? 100 : 255}
-                    stepSize={0.25}
+                    max={this.props.maxValue || 255}
+                    stepSize={!this.props.maxValue ? 0.25 : 0.01} //TODO: Pretty this hidden quirk up
                     labelStepSize={50}
                     labelRenderer={false} //{(val) => `${Math.round(val)}%`}
                     vertical={true}

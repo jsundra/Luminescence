@@ -85,6 +85,7 @@ export default class FixtureComponent extends Component<Props, State> {
                         id={offset}
                         sliderClass={'hue-slider'}
                         componentLabel='RGB'
+                        maxValue={100}
                         sliderVal={hue}
                         onSliderChange={this.onColorChange.bind(this)}
                     />,

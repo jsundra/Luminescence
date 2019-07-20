@@ -57,7 +57,7 @@ export class OutputData {
 }
 
 export class ControlData {
-    public master: number;
+    public master: number = 1;
 }
 
 export class DimmerData {

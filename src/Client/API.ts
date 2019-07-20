@@ -63,7 +63,14 @@ export module API {
 
 	export function bindMessageBus(msgBus: MessageBus): void {
 		msgBus.subscribe<MSG_CHANGE_CONTROL>(MSG_CHANGE_CONTROL, msg => {
-
+			SetControl('master', msg.master)
+				.then(data => {
+					msgBus.dispatch<MSG_DATA_UPDATE>(MSG_DATA_UPDATE, data);
+				})
+				.catch(reason => {
+					console.error(`Error setting control (${reason})`);
+				}
+			);
 		});
 
 		msgBus.subscribe<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, msg => {

@@ -20,6 +20,7 @@ export default class MasterWindow extends BaseWindow<Props, State> {
                 <SingleChannel
                     id={0}
                     componentLabel={`Grand Master`}
+                    maxValue={1}
                     sliderVal={this.props.controls.master}
                     onSliderChange={(id, val) => {
                         this.props.msgBus.dispatch<MSG_CHANGE_CONTROL>(MSG_CHANGE_CONTROL, {

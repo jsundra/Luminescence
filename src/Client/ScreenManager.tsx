@@ -2,13 +2,13 @@ import React = require('react');
 import { Component, ReactNode } from 'react';
 import { ScreenTypes } from './Screens/ScreenTypes';
 import { Mosaic, MosaicBranch, MosaicWindow } from 'react-mosaic-component';
-import { BoardData, DimmerOwnership } from '../Common/BoardData';
+import { BoardData } from '../Common/BoardData';
 import { API } from './API';
-import { MSG_UPDATE_DIMMER, MSG_UNPARK_DIMMER, MSG_ASSIGN_FIXTURE, MSG_SET_FIXTURE, MSG_DATA_UPDATE } from './Messages';
+import { MSG_DATA_UPDATE } from './Messages';
 import { ContextInstance, RootContext } from './RootContext';
 import DimmersWindow from './Screens/DimmersWindow';
 import ChannelsWindow from './Screens/ChannelsWindow';
-import { FixtureUtils } from '../Common/Fixtures/FixtureUtils';
+import MasterWindow from './Screens/MasterWindow';
 
 interface State {
     boardData: BoardData;
@@ -49,7 +49,12 @@ export default class ScreenManager extends Component<{}, State> {
             <div>
                 <Mosaic<ScreenTypes>
                     renderTile={this.createScreen.bind(this)}
-                    initialValue={defaultScreen || ScreenTypes.Dimmers}
+                    initialValue={{
+                        direction: 'row',
+                        first: defaultScreen || ScreenTypes.Dimmers,
+                        second: ScreenTypes.Controls,
+                        splitPercentage: 92
+                    }}
                     className={'mosaic-blueprint-theme bp3-dark'}
                 />
             </div>
@@ -59,19 +64,27 @@ export default class ScreenManager extends Component<{}, State> {
     private createScreen<T extends ScreenTypes>(type: T, path: MosaicBranch[]): JSX.Element {
         let elm: JSX.Element;
         switch(type) {
-            case 'Dimmers':
+            case ScreenTypes.Controls:
+                elm = <MasterWindow
+                        msgBus={this.context.msgBus}
+                        controls={this.state.boardData.controls}
+                    />;
+                break;
+            case ScreenTypes.Dimmers:
                 elm = <DimmersWindow
                     msgBus={this.context.msgBus}
                     outputData={this.state.boardData.output}
                     dimmerData={this.state.boardData.dimmers}
                 />;
                 break;
-            case 'Channels':
+            case ScreenTypes.Channels:
                 elm = <ChannelsWindow
                     msgBus={this.context.msgBus}
                     channelData={this.state.boardData.channels}
                 />;
                 break;
+            default:
+                throw new Error('Unknown screen type!');
         }
         return (<MosaicWindow<T> title={type} path={path}>{elm}</MosaicWindow>);
     }
