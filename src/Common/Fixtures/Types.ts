@@ -1,4 +1,10 @@
-import { ChauvetQ12, ChauvetQ6, ChauvetQUV12 } from 'Common/Fixtures/Types/Chauvet';
+import {
+    ChauvetColordashAccentQuad,
+    ChauvetH6,
+    ChauvetQ12,
+    ChauvetQ6,
+    ChauvetQUV12
+} from 'Common/Fixtures/Types/Chauvet';
 import { Ellipsoidal } from 'Common/Fixtures/Types/StageRight';
 
 export type FixtureModes = '1-Channel' | '4-Channel' | '6-Channel' | '9-Channel';
@@ -25,5 +31,7 @@ export const AllFixtureTypes: FixtureDescriptor[] = [
     new ChauvetQ6(),
     new ChauvetQ12(),
     new ChauvetQUV12(),
+    new ChauvetColordashAccentQuad(),
+    new ChauvetH6(),
     new Ellipsoidal()
 ];

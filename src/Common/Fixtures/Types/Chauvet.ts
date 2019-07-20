@@ -23,3 +23,9 @@ export class ChauvetH6 implements FixtureDescriptor {
     public readonly modes: FixtureModes[] = [ '6-Channel' ];
     public readonly components = { '6-Channel': [ 'RGB', 'A', 'W', 'UV' ]};
 }
+
+export class ChauvetColordashAccentQuad implements FixtureDescriptor {
+    public readonly name = 'Colordash Accent Quad';
+    public readonly modes: FixtureModes[] = [ '4-Channel' ];
+    public readonly components = { '4-Channel': [ 'RGB', 'A' ] };
+}

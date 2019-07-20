@@ -65,6 +65,7 @@ export default class PersistentBoardData implements IPersistentBoardData {
         }
 
         for (const i in this.channels) {
+            const iNum = Number.parseInt(i);
             const data = this.channels[i];
             const fixture = FixtureUtils.createFromDescriptor(FixtureUtils.descriptorFromName(data.type));
 
@@ -72,7 +73,7 @@ export default class PersistentBoardData implements IPersistentBoardData {
             rtn.channels.fixtures[i] = fixture;
             for (let j = 0; j < data.values.length; j++) {
                 // @ts-ignore
-                rtn.channels.values[i + j] = data.values[j];
+                rtn.channels.values[iNum + j] = data.values[j];
             }
         }
 

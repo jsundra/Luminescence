@@ -19,10 +19,36 @@ export module ColorUtil {
     }
 
     export function RGBToHue(color: RGB): number {
-        throw new Error('lol I\'m lazy');
+        let rInfl = color.r / 255;
+        let gInfl = color.g / 255;
+        let bInfl = color.b / 255;
+
+        if (rInfl > gInfl && rInfl > bInfl) {
+            if (gInfl > bInfl) { // Closer to 0
+                return gInfl * 120;
+            } else { // Closer to 360
+                return 360 - bInfl * 120;
+            }
+        }
+
+        if (gInfl > bInfl && gInfl > rInfl) {
+            if (rInfl > bInfl) {
+                return gInfl * 120 - rInfl * 60;
+            } else {
+                return gInfl * 120 + bInfl * 60;
+            }
+        }
+
+        if (bInfl > rInfl && bInfl > gInfl) {
+            if (rInfl > gInfl) {
+                return bInfl * 240 + rInfl * 60;
+            } else {
+                return bInfl * 240 - gInfl * 60;
+            }
+        }
     }
 
     export function RGBToSlider(color: RGB): number {
-        return RGBToHue(color) * 3.6;
+        return RGBToHue(color) / 3.6;
     }
 }

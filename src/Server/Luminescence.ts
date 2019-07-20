@@ -38,7 +38,7 @@ export default class Luminescence {
         this._data = sync.loadFromDisk(saveSrc);
 
         // TODO: Load from scene/user config
-        this._data.output.values.length = 150;
+        this._data.output.values.length = 200;
 
         this._data.addListenerPersistent(() => {
             sync.saveToDisk(saveSrc, this._data);
@@ -49,9 +49,9 @@ export default class Luminescence {
         this.findAdapter();
         this.watchUSB();
 
-        for (let i = 0; i < 150; i++) {
-            this._controller.setDimmerValue(i, DimmerOwnership.Relinquished);
-        }
+        // for (let i = 0; i < 150; i++) {
+        //     this._controller.setDimmerValue(i, DimmerOwnership.Relinquished);
+        // }
 
         // Verify this is needed
         // for (let i = 0; i < 150; i++) {
