@@ -29,7 +29,6 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
     }
 
     public render() {
-        console.log(this.props.sliderVal);
         return (
             <div className={'luminescence-singlechannel'} onTouchMove={e => e.preventDefault()}>
                 <div>{this.props.componentLabel}</div>
@@ -42,6 +41,7 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
                     labelRenderer={false} //{(val) => `${Math.round(val)}%`}
                     vertical={true}
                     value={this.props.sliderVal || 0}
+                    showTrackFill={this.props.sliderClass === undefined}
                     onChange={(value) => {
                         // this.setState({value});
                         this.props.onSliderChange(this.props.id, value);

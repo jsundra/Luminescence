@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Fixture } from 'Common/BoardData';
 import { SingleChannel } from './SingleChannel';
 import { ColorUtil } from "../Util/ColorUtil";
+import RGBToSlider = ColorUtil.RGBToSlider;
 
 export type Props = {
     addr: number | string;
@@ -25,6 +26,7 @@ export default class FixtureComponent extends Component<Props, State> {
     public render(): JSX.Element {
         return (
             <div className='luminescence-controlgroup'>
+                <div>{`${this.props.addr as number + 1}`}</div>
                 <div>{this.buildComponents()}</div>
 
                 <input className="bp3-input"
@@ -72,7 +74,12 @@ export default class FixtureComponent extends Component<Props, State> {
                     stride: 1
                 };
             case 'RGB':
-                const hue: number = this.props.intensities[offset];
+                const color = {
+                    r: this.props.intensities[offset],
+                    g: this.props.intensities[offset+1],
+                    b: this.props.intensities[offset+2]
+                };
+                const hue: number = RGBToSlider(color);
                 return {
                     elm: <SingleChannel
                         id={offset}
