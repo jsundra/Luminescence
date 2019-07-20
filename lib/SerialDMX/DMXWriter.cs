@@ -21,7 +21,7 @@ namespace SerialDMX
                 return;
             }
 
-            _buffer = new byte[maxAddr + 1];
+            _buffer = new byte[maxAddr];
             _sendRate = sendRate;
             
             _serialPort = new SerialPort
@@ -47,8 +47,7 @@ namespace SerialDMX
 
         public void UpdateDMX(byte[] buffer)
         {
-            // Ignore [0] when copying, DMX protocol requires [0] = 0.
-            Buffer.BlockCopy(buffer, 0, _buffer, 1, buffer.Length);
+            Buffer.BlockCopy(buffer, 0, _buffer, 0, buffer.Length);
         }
 
         public void Close()

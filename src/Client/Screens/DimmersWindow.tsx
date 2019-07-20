@@ -25,7 +25,7 @@ export default class DimmersWindow extends BaseWindow<Props, State> {
         const outputData = this.props.outputData;
         const dimmerData = this.props.dimmerData;
 
-        for (let i = 0; i < outputData.values.length; i++) {
+        for (let i = 1; i < outputData.values.length; i++) {
             const parked = outputData.owner[i] === DimmerOwnership.Parked;
             const index = i;
 
@@ -45,7 +45,7 @@ export default class DimmersWindow extends BaseWindow<Props, State> {
                     />}
                     <SingleChannel
                         id={i}
-                        componentLabel={`${i+1}`}
+                        componentLabel={`${i}`}
                         sliderVal={outputData.values[i] || 0}
                         sliderLabel={dimmerData.names[i] || ''}
                         onSliderChange={(id, val) => {

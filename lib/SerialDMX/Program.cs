@@ -63,7 +63,7 @@ namespace SerialDMX
                 {
                     return int.Parse(args[index]);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine($"Error parsing arg {index}.");
                 }
