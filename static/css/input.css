@@ -1,0 +1,58 @@
+.slider {
+    -webkit-appearance: none;
+    width: 170px;
+    outline: none;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.slider:focus {
+    outline: none;
+}
+
+.slider.vertical {
+    -webkit-transform:rotate(-90deg);
+    margin: 85px 0px 90px -35px;
+    user-select: none;
+    /* text-align: center; */
+}
+
+.slider::-webkit-slider-runnable-track {
+    background: #212b34;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 20px;
+    width: 0;
+    border-radius: 15%;
+    background: dodgerblue;
+
+    box-shadow: -100vw 0 0 100vw dodgerblue;
+}
+
+
+
+.hue-radial {
+    display: inline-block;
+    margin: 5px;
+    width: 150px;
+    height: 150px;
+    background:
+        radial-gradient(circle at 50% 0,
+            rgba(255,0,0,1),
+            rgba(255,0,0,0) 70.71%),
+        radial-gradient(circle at 6.7% 75%,
+            rgba(0,0,255,1),
+            rgba(0,0,255,0) 70.71%),
+        radial-gradient(circle at 93.3% 75%,
+            rgba(0,255,0,1),
+            rgba(0,255,0,0) 70.71%),
+        radial-gradient(circle at 50% 50%,
+            rgba(255,255,255,1),
+            rgba(255,255,255,0) 40.71%);
+    border-radius: 50%;
+}

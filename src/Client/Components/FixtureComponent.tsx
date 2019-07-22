@@ -5,6 +5,8 @@ import { Fixture } from 'Common/BoardData';
 import { SingleChannel } from './SingleChannel';
 import { ColorUtil } from "../Util/ColorUtil";
 import RGBToSlider = ColorUtil.RGBToSlider;
+import HueRadial from './HueRadial';
+import RGB = ColorUtil.RGB;
 
 export type Props = {
     addr: number | string;
@@ -79,18 +81,14 @@ export default class FixtureComponent extends Component<Props, State> {
                     g: this.props.intensities[offset+1],
                     b: this.props.intensities[offset+2]
                 };
-                const hue: number = RGBToSlider(color);
+                console.warn(color);
                 return {
-                    elm: <SingleChannel
-                        id={offset}
-                        sliderClass={'hue-slider'}
-                        componentLabel='RGB'
-                        maxValue={100}
-                        sliderVal={hue}
-                        onSliderChange={this.onColorChange.bind(this)}
+                    elm: <HueRadial
+                        color={color}
+                        onColorChange={col => this.onColorChange(offset, col)}
                     />,
                     stride: 3
-                }
+                };
             case 'A':
             case 'W':
             case 'UV':
@@ -106,12 +104,11 @@ export default class FixtureComponent extends Component<Props, State> {
         }
     }
 
-    private onColorChange(offset: number, sliderVal: number): void {
-        const color = ColorUtil.SliderToRGB(sliderVal);
+    private onColorChange(offset: number, color: RGB): void {
 
-        this._values[offset] = color.r * 255;
-        this._values[offset+1] = color.g * 255;
-        this._values[offset+2] = color.b * 255;
+        this._values[offset] = color.r;
+        this._values[offset+1] = color.g;
+        this._values[offset+2] = color.b;
         this.props.onValueChange(this.props.addr as number, this._values);
     }
 

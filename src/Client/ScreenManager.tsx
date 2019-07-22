@@ -53,7 +53,7 @@ export default class ScreenManager extends Component<{}, State> {
                         direction: 'row',
                         first: defaultScreen || ScreenTypes.Dimmers,
                         second: ScreenTypes.Controls,
-                        splitPercentage: 92
+                        splitPercentage: 90
                     }}
                     className={'mosaic-blueprint-theme bp3-dark'}
                 />

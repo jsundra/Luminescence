@@ -57,6 +57,7 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
             const addrNum = Number.parseInt(addr);
 
             children.push(<FixtureComponent
+                key={addr}
                 fixture={fixture}
                 addr={addr}
                 intensities={channelData.values.slice(addrNum, addrNum + fixture.stride)}

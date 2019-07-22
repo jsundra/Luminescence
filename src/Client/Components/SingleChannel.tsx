@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Slider } from '@blueprintjs/core';
 import { Component } from 'react';
+import Slider, { Direction } from './Slider';
 
 export type SingleChannelProps = {
     id: number;
@@ -35,17 +35,12 @@ export class SingleChannel extends Component<SingleChannelProps, SingleChannelSt
             <div className={'luminescence-singlechannel'} onTouchMove={e => e.preventDefault()}>
                 <div>{this.props.componentLabel}</div>
                 <Slider
-                    className={'slider ' + (this.props.sliderClass || '')}
                     min={0}
-                    max={this.props.maxValue || 255}
-                    stepSize={!this.props.maxValue ? 0.25 : 0.01} //TODO: Pretty this hidden quirk up
-                    labelStepSize={50}
-                    labelRenderer={false} //{(val) => `${Math.round(val)}%`}
-                    vertical={true}
-                    value={this.props.sliderVal || 0}
-                    showTrackFill={this.props.sliderClass === undefined}
-                    onChange={(value) => {
-                        // this.setState({value});
+                    max={255}
+                    value={this.props.sliderVal}
+                    direction={Direction.Vertical}
+                    onChange={value => {
+                        this.setState({ value });
                         this.props.onSliderChange(this.props.id, value);
                     }}
                 />
