@@ -6,7 +6,7 @@ import { FixtureUtils } from '../../Common/Fixtures/FixtureUtils';
 export default class ChannelsModule extends BoardModule {
 
     public getOutput(addr: number): Nullable<number> {
-        return null;
+        return this._boardData.channels.values[addr];
     }
 
     public getOwnershipLevel(): DimmerOwnership {

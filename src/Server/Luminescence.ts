@@ -49,9 +49,9 @@ export default class Luminescence {
         this.findAdapter();
         this.watchUSB();
 
-        // for (let i = 0; i < 150; i++) {
-        //     this._controller.setDimmerValue(i, DimmerOwnership.Relinquished);
-        // }
+        for (let i = 0; i < 150; i++) {
+            this._controller.setDimmerValue(i, DimmerOwnership.Relinquished);
+        }
 
         // Verify this is needed
         // for (let i = 0; i < 150; i++) {
