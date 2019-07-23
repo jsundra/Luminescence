@@ -47,6 +47,11 @@ h3 {
 	  margin: 5px;
 }
 
+.controlgroup-header {
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
 .bp3-input {
 	text-align: center;
 }
@@ -92,9 +97,6 @@ h3 {
 	width: 30px;
 	height: 30px;
 	float: left;
-	/* position: relative; */
-	/* top: 0px; */
-	/* display: inline-block; */
 }
 
 .btn-icon {
@@ -118,6 +120,13 @@ h3 {
     text-align: center;
 }
 
-.hue-slider .bp3-slider-track {
-	background: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+.fixture {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: stretch;
+		justify-content: center;
+}
+
+.hue-group:last-child {
+	width: 100px;
 }

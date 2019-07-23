@@ -92,9 +92,7 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
                 position={'bottom'}
                 onClose={event => this.addFixture((event.target as HTMLInputElement).innerText)}
             >
-                <div className='luminescence-controlgroup clickable'
-
-                >
+                <div className='luminescence-controlgroup clickable'>
                     <span className='btn-icon'>+</span>
                 </div>
             </Popover>

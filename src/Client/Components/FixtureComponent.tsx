@@ -28,8 +28,8 @@ export default class FixtureComponent extends Component<Props, State> {
     public render(): JSX.Element {
         return (
             <div className='luminescence-controlgroup'>
-                <div>{`${this.props.addr as number + 1}`}</div>
-                <div>{this.buildComponents()}</div>
+                <div className='controlgroup-header'>{`${this.props.addr as number + 1}`}</div>
+                <div className='fixture'>{this.buildComponents()}</div>
 
                 <input className="bp3-input"
                        type="text"
@@ -77,11 +77,10 @@ export default class FixtureComponent extends Component<Props, State> {
                 };
             case 'RGB':
                 const color = {
-                    r: this.props.intensities[offset],
-                    g: this.props.intensities[offset+1],
-                    b: this.props.intensities[offset+2]
+                    r: this.props.intensities[offset] / 255,
+                    g: this.props.intensities[offset+1] / 255,
+                    b: this.props.intensities[offset+2] / 255
                 };
-                console.warn(color);
                 return {
                     elm: <HueRadial
                         color={color}
@@ -105,10 +104,10 @@ export default class FixtureComponent extends Component<Props, State> {
     }
 
     private onColorChange(offset: number, color: RGB): void {
-
-        this._values[offset] = color.r;
-        this._values[offset+1] = color.g;
-        this._values[offset+2] = color.b;
+        this._values[offset] = Math.min(255, color.r * 255);
+        this._values[offset+1] = Math.min(255, color.g * 255);
+        this._values[offset+2] = Math.min(255, color.b * 255);
+        console.log(this._values);
         this.props.onValueChange(this.props.addr as number, this._values);
     }
 

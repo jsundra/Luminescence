@@ -61,7 +61,7 @@ export default class Slider extends Component<Props, State> {
                     type="range"
                     min={this.props.min}
                     max={this.props.max}
-                    value={this.props.value}
+                    value={this.props.value || 0}
                     step={this.state.step}
 
                     width={this.state.width}
