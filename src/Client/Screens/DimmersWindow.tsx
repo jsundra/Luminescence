@@ -29,6 +29,8 @@ export default class DimmersWindow extends BaseWindow<Props, State> {
             const parked = outputData.owner[i] === DimmerOwnership.Parked;
             const index = i;
 
+            const outputLevel = outputData.values[i] !== null ? outputData.values[i] : dimmerData.values[i] || 0;
+
             children.push(
                 <div
                     className={'luminescence-controlgroup ' + (parked ? 'parked' : '')}
@@ -46,7 +48,7 @@ export default class DimmersWindow extends BaseWindow<Props, State> {
                     <SingleChannel
                         id={i}
                         componentLabel={`${i}`}
-                        sliderVal={outputData.values[i] || 0}
+                        sliderVal={outputLevel}
                         sliderLabel={dimmerData.names[i] || ''}
                         onSliderChange={(id, val) => {
                             this.props.msgBus.dispatch<MSG_UPDATE_DIMMER>(MSG_UPDATE_DIMMER, {

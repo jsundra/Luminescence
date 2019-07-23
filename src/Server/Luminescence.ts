@@ -38,7 +38,7 @@ export default class Luminescence {
         this._data = sync.loadFromDisk(saveSrc);
 
         // TODO: Load from scene/user config
-        this._data.output.values.length = 200;
+        this._data.output.values.length = 300;
 
         this._data.addListenerPersistent(() => {
             sync.saveToDisk(saveSrc, this._data);

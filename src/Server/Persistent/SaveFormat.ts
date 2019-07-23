@@ -66,7 +66,7 @@ export default class PersistentBoardData implements IPersistentBoardData {
         for (const i in this.dimmers) {
             const data = this.dimmers[i];
             rtn.dimmers.names[i] = data.name;
-            rtn.dimmers.values[i] = data.value
+            rtn.dimmers.values[i] = data.value;
         }
 
         // Channels
