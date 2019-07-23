@@ -42,8 +42,15 @@ export default class HueRadial extends Component<Props, State> {
                         if (this._dragActive) this.updateRGB(e.clientX, e.clientY);
                         this._dragActive = false;
                     }}
-
+                    onPointerLeave={() => this._dragActive = false}
                 />
+                <div style={{
+                    backgroundColor: `rgba(${this.props.color.r * 255}, ${this.props.color.g * 255}, ${this.props.color.b * 255}, 1`,
+                    margin: 'auto',
+                    width: '75%',
+                    height: '22px',
+                    borderRadius: '4px'
+                }} />
             </div>,
             <div style={{width: '100px'}}>
                 <Slider
