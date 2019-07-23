@@ -27,7 +27,7 @@ export default class ChannelsModule extends BoardModule {
         for (let i = 0; i < values.length; i++) {
             const value = values[i];
             this._boardData.channels.values[address + i] = value; // TODO: Remove +1 with refactor!
-            this._dmxController.setDimmerValue(address + i + 1, DimmerOwnership.Focus, value)
+            this._dmxController.setDimmerValue(address + i, DimmerOwnership.Focus, value)
         }
         this._boardData.markDirty();
     }

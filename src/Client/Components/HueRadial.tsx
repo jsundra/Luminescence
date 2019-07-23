@@ -97,8 +97,6 @@ export default class HueRadial extends Component<Props, State> {
         let g = Math.max(0, 120 - Math.abs(120 - theta)) / 120;
         let b = Math.max(0, 120 - Math.abs(240 - theta)) / 120;
 
-        console.warn(r, g, b);
-
         const saturation = Math.pow(1 - (Math.sqrt(x * x + y * y) / rect.width * 2), 2);
         const saturationColor: RGB = {
             r: (1 - r) * saturation,

@@ -28,7 +28,7 @@ export default class FixtureComponent extends Component<Props, State> {
     public render(): JSX.Element {
         return (
             <div className='luminescence-controlgroup'>
-                <div className='controlgroup-header'>{`${this.props.addr as number + 1}`}</div>
+                <div className='controlgroup-header'>{`${this.props.addr}`}</div>
                 <div className='fixture'>{this.buildComponents()}</div>
 
                 <input className="bp3-input"
@@ -69,7 +69,7 @@ export default class FixtureComponent extends Component<Props, State> {
                 return {
                     elm: <SingleChannel
                         id={offset}
-                        componentLabel={`${addr + 1}`}
+                        componentLabel={`${addr}`}
                         sliderVal={this.props.intensities[offset]}
                         onSliderChange={this.onSliderChange.bind(this)}
                     />,
@@ -107,7 +107,6 @@ export default class FixtureComponent extends Component<Props, State> {
         this._values[offset] = Math.min(255, color.r * 255);
         this._values[offset+1] = Math.min(255, color.g * 255);
         this._values[offset+2] = Math.min(255, color.b * 255);
-        console.log(this._values);
         this.props.onValueChange(this.props.addr as number, this._values);
     }
 
