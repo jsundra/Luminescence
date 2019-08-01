@@ -1,6 +1,7 @@
 import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { FixtureUtils } from '../../Common/Fixtures/FixtureUtils';
 
+
 type DimmerSave = {
     [address: number]: {
         name: string,
@@ -11,8 +12,9 @@ type DimmerSave = {
 type ChannelSave = {
     [address: number]: {
         type: string,
-        alias: string
-        values?: number[];
+        alias: string,
+        values?: number[],
+        data?: Dict<any>
     };
 }
 
@@ -76,7 +78,7 @@ export default class PersistentBoardData implements IPersistentBoardData {
             const fixture = FixtureUtils.createFromDescriptor(FixtureUtils.descriptorFromName(data.type));
 
             fixture.alias = data.alias;
-            rtn.channels.fixtures[i] = fixture;
+            rtn.channels.fixtures[iNum] = fixture;
             for (let j = 0; j < data.values.length; j++) {
                 // @ts-ignore
                 rtn.channels.values[iNum + j] = data.values[j];

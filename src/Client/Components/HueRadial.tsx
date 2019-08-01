@@ -26,7 +26,7 @@ export default class HueRadial extends Component<Props, State> {
 
     public render(): JSX.Element[] {
         return ([
-            <div>
+            <div key={0}>
                 <div>Color</div>
                 <div
                     className='hue-radial'
@@ -52,7 +52,7 @@ export default class HueRadial extends Component<Props, State> {
                     borderRadius: '4px'
                 }} />
             </div>,
-            <div style={{width: '100px'}}>
+            <div key={1} style={{width: '100px'}}>
                 <Slider
                     label={'Brightness'}
                     min={0}

@@ -4,9 +4,9 @@ import * as React from 'react';
 import { Fixture } from 'Common/BoardData';
 import { SingleChannel } from './SingleChannel';
 import { ColorUtil } from "../Util/ColorUtil";
-import RGBToSlider = ColorUtil.RGBToSlider;
 import HueRadial from './HueRadial';
 import RGB = ColorUtil.RGB;
+import { Diff } from '../../Common/Util/Diff';
 
 export type Props = {
     addr: number | string;
@@ -25,7 +25,12 @@ export default class FixtureComponent extends Component<Props, State> {
 
     private _values: number[] = [];
 
+    public shouldComponentUpdate(newProps: Props): boolean {
+        return Diff.notEqual(newProps, this.props);
+    }
+
     public render(): JSX.Element {
+        console.warn(`render ${this.props.addr}`);
         return (
             <div className='luminescence-controlgroup'>
                 <div className='controlgroup-header'>{`${this.props.addr}`}</div>
@@ -68,6 +73,7 @@ export default class FixtureComponent extends Component<Props, State> {
             case ' ':
                 return {
                     elm: <SingleChannel
+                        key={`${addr}.${offset}`}
                         id={offset}
                         componentLabel={`${addr}`}
                         sliderVal={this.props.intensities[offset]}
@@ -81,8 +87,10 @@ export default class FixtureComponent extends Component<Props, State> {
                     g: this.props.intensities[offset+1] / 255,
                     b: this.props.intensities[offset+2] / 255
                 };
+                console.log('>>>', addr);
                 return {
                     elm: <HueRadial
+                        key={`${addr}.${offset}`}
                         color={color}
                         onColorChange={col => this.onColorChange(offset, col)}
                     />,
@@ -93,6 +101,7 @@ export default class FixtureComponent extends Component<Props, State> {
             case 'UV':
                 return {
                     elm: <SingleChannel
+                        key={`${addr}.${offset}`}
                         id={offset}
                         componentLabel={display}
                         sliderVal={this.props.intensities[offset]}

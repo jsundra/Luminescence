@@ -1,4 +1,4 @@
-import { FixtureDescriptor, FixtureModes } from 'Common/Fixtures/Types';
+import { FixtureDescriptor, FixtureDisplays, FixtureModes } from 'Common/Fixtures/Types';
 
 type ChangeHandler = () => void;
 
@@ -66,7 +66,7 @@ export class DimmerData {
 }
 
 export class ChannelData {
-    public values: number[] = [];
+    // public values: number[] = [];
     public fixtures: {[index: number]: Fixture} = {};
 }
 
@@ -77,9 +77,23 @@ export class Fixture {
     public mode: FixtureModes;
     public alias: string;
 
+    public data: {[key: FixtureDisplays]: number};
+
     constructor(descriptor: FixtureDescriptor, stride: number) {
         this.descriptor = descriptor;
         this.stride = stride;
+    }
+
+    public loadData(data: Dict<any>): void {
+
+    }
+
+    public computeIntensities(): number[] {
+        var rtn = [];
+
+        for (const type of this.descriptor.components[this.mode]) {
+
+        }
     }
 }
 

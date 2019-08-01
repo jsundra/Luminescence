@@ -49,7 +49,7 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
         const children: JSX.Element[] = [];
         const channelData = this.props.channelData;
 
-        for (let addr in channelData.fixtures) {
+        for (const addr in channelData.fixtures) {
             // @ts-ignore
             addr = Number.parseInt(addr); // TODO: Remove this. Loading from JSON, channelData.fixtures is a string.
 
@@ -65,7 +65,7 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
                     this.props.msgBus.dispatch<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, {
                         addr,
                         intensities
-                    })
+                    });
                 }}
                 onAliasChange={(addr, alias) => {
                     this.props.msgBus.dispatch<MSG_SET_FIXTURE>(MSG_SET_FIXTURE, {
@@ -82,8 +82,9 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
     private showNewButton(): JSX.Element {
 
         const menuItems = [];
+        let i = 0;
         for (const type of AllFixtureTypes) {
-            menuItems.push(<MenuItem text={type.name} />)
+            menuItems.push(<div key={i++}><MenuItem text={type.name} /></div>);
         }
 
         return (

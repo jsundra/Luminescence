@@ -6,6 +6,21 @@ import { FixtureUtils } from '../../Common/Fixtures/FixtureUtils';
 export default class ChannelsModule extends BoardModule {
 
     public getOutput(addr: number): Nullable<number> {
+        let owningAddr: number;
+
+        if (this._boardData.channels.fixtures[addr] !== undefined) {
+            owningAddr = addr;
+        } else {
+            for (const key in this._boardData.channels.fixtures) {
+                const keyNum = Number.parseInt(key);
+                if (keyNum < addr) {
+                    owningAddr = keyNum;
+                } else {
+                    break;
+                }
+            }
+        }
+
         return this._boardData.channels.values[addr];
     }
 
