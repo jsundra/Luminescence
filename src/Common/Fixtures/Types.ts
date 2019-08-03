@@ -10,13 +10,26 @@ import { Ellipsoidal } from 'Common/Fixtures/Types/StageRight';
 export type FixtureModes = '1-Channel' | '4-Channel' | '6-Channel' | '9-Channel';
 export type FixtureDisplays = ' ' | 'RGB' | 'A' | 'W' | 'UV';
 
+// {[key: FixtureModes]: FixtureDisplays[]};
+export type FixtureModeMap = {
+    '1-Channel': FixtureDisplays[];
+    '4-Channel': FixtureDisplays[];
+    '6-Channel': FixtureDisplays[];
+    '9-Channel': FixtureDisplays[];
+}
+
+export type FixtureData = {
+    ' ': number
+    'RGB':
+    'A':
+    'W':
+    'UV':
+}
+
 export interface FixtureDescriptor {
     name: string;
     modes: FixtureModes[];
-    components: {
-        // @ts-ignore
-        [key: FixtureModes]: FixtureDisplays[]
-    }
+    components: FixtureModeMap;
 }
 
 export class SingleDimmer implements FixtureDescriptor {

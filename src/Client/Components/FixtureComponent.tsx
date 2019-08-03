@@ -11,14 +11,13 @@ import { Diff } from '../../Common/Util/Diff';
 export type Props = {
     addr: number | string;
     fixture: Fixture;
-    intensities: number[];
 
     onValueChange: (addr: number, intensities: number[]) => void;
     onAliasChange: (addr: number, alias: string) => void;
 };
 
 export type State = {
-
+    intensities: number[];
 };
 
 export default class FixtureComponent extends Component<Props, State> {
@@ -51,6 +50,12 @@ export default class FixtureComponent extends Component<Props, State> {
         );
     }
 
+    public static getDerivedStateFromProps(props: Props): State {
+        return {
+            intensities: props.fixture.computeIntensities()
+        };
+    }
+
     private buildComponents(): JSX.Element[] {
         const children: JSX.Element[] = [];
         const fixture = this.props.fixture;
@@ -76,16 +81,16 @@ export default class FixtureComponent extends Component<Props, State> {
                         key={`${addr}.${offset}`}
                         id={offset}
                         componentLabel={`${addr}`}
-                        sliderVal={this.props.intensities[offset]}
+                        sliderVal={this.state.intensities[offset]}
                         onSliderChange={this.onSliderChange.bind(this)}
                     />,
                     stride: 1
                 };
             case 'RGB':
                 const color = {
-                    r: this.props.intensities[offset] / 255,
-                    g: this.props.intensities[offset+1] / 255,
-                    b: this.props.intensities[offset+2] / 255
+                    r: this.state.intensities[offset] / 255,
+                    g: this.state.intensities[offset+1] / 255,
+                    b: this.state.intensities[offset+2] / 255
                 };
                 console.log('>>>', addr);
                 return {
@@ -104,7 +109,7 @@ export default class FixtureComponent extends Component<Props, State> {
                         key={`${addr}.${offset}`}
                         id={offset}
                         componentLabel={display}
-                        sliderVal={this.props.intensities[offset]}
+                        sliderVal={this.state.intensities[offset]}
                         onSliderChange={this.onSliderChange.bind(this)}
                     />,
                     stride: 1

@@ -1,4 +1,6 @@
-import { FixtureDescriptor, FixtureDisplays, FixtureModes } from 'Common/Fixtures/Types';
+import { FixtureDescriptor, FixtureDisplays, FixtureModeMap, FixtureModes } from 'Common/Fixtures/Types';
+import { ColorUtil } from "../Client/Util/ColorUtil";
+import RGB = ColorUtil.RGB;
 
 type ChangeHandler = () => void;
 
@@ -77,6 +79,7 @@ export class Fixture {
     public mode: FixtureModes;
     public alias: string;
 
+    // @ts-ignore
     public data: {[key: FixtureDisplays]: number};
 
     constructor(descriptor: FixtureDescriptor, stride: number) {
@@ -89,10 +92,29 @@ export class Fixture {
     }
 
     public computeIntensities(): number[] {
-        var rtn = [];
+        const rtn = [];
 
-        for (const type of this.descriptor.components[this.mode]) {
-
+        // @ts-ignore
+        let index = 0;
+        const controls: FixtureDisplays[] = this.descriptor.components[this.mode];
+        for (const type of controls) {
+            switch (type) {
+                case ' ':
+                case 'A':
+                case 'W':
+                case 'UV':
+                    rtn[index++] = this.data[type];
+                    break;
+                case 'RGB':
+                    const color: RGB = this.data[type].color;
+                    const dimmer: number = this.data[type].dimmer;
+                    rtn[index++] = color.r * dimmer;
+                    rtn[index++] = color.g * dimmer;
+                    rtn[index++] = color.b * dimmer;
+                    break;
+                default:
+                    throw new Error(`Fixture cannot commpute intensity for control type (${type})`);
+            }
         }
     }
 }
