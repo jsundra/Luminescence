@@ -70,7 +70,7 @@ export class DimmerData {
 export class ChannelData {
     // public values: number[] = [];
     public fixtures: {[index: number]: Fixture} = {};
-    public values: number[];
+    public values: number[] = [];
 }
 
 export class Fixture {

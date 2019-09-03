@@ -49,7 +49,7 @@ export default class ChannelsWindow extends BaseWindow<Props, State> {
         const children: JSX.Element[] = [];
         const channelData = this.props.channelData;
 
-        for (const addr in channelData.fixtures) {
+        for (let addr in channelData.fixtures) {
             // @ts-ignore
             addr = Number.parseInt(addr); // TODO: Remove this. Loading from JSON, channelData.fixtures is a string.
 
