@@ -70,6 +70,7 @@ export class DimmerData {
 export class ChannelData {
     // public values: number[] = [];
     public fixtures: {[index: number]: Fixture} = {};
+    public values: number[];
 }
 
 export class Fixture {
@@ -94,7 +95,6 @@ export class Fixture {
     public computeIntensities(): number[] {
         const rtn = [];
 
-        // @ts-ignore
         let index = 0;
         const controls: FixtureDisplays[] = this.descriptor.components[this.mode];
         for (const type of controls) {
@@ -103,10 +103,13 @@ export class Fixture {
                 case 'A':
                 case 'W':
                 case 'UV':
+                    // @ts-ignore
                     rtn[index++] = this.data[type];
                     break;
                 case 'RGB':
+                    // @ts-ignore
                     const color: RGB = this.data[type].color;
+                    // @ts-ignore
                     const dimmer: number = this.data[type].dimmer;
                     rtn[index++] = color.r * dimmer;
                     rtn[index++] = color.g * dimmer;
@@ -116,6 +119,8 @@ export class Fixture {
                     throw new Error(`Fixture cannot commpute intensity for control type (${type})`);
             }
         }
+
+        return rtn;
     }
 }
 
