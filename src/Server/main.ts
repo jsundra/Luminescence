@@ -7,6 +7,7 @@ import './Config/Config';
 import Luminescence from './Luminescence';
 import { Request, Response } from 'express';
 import { PayloadError } from '../Common/Networking/Payloads/Payload';
+import { Log } from './Logging';
 
 const wwwDir = path.join(__dirname, '../www/');
 
@@ -54,7 +55,7 @@ async function init() {
         }
     });
 
-    server.listen(3000, '0.0.0.0', () => console.log('Server started. Listening on port 3000.'));
+    server.listen(3000, '0.0.0.0', () => Log.always('Server started. Listening on port 3000.'));
 }
 
 init();

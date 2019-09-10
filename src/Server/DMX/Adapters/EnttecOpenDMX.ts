@@ -1,5 +1,6 @@
 import DMXAdapter from './DMXAdapter';
 import { spawn, ChildProcessWithoutNullStreams} from 'child_process'
+import { Log } from '../../Logging';
 
 // References
 //  DMX Protocol: https://en.wikipedia.org/wiki/DMX512#Protocol
@@ -20,7 +21,7 @@ export default class EnttecOpenDMX extends DMXAdapter {
         this._serialProc = spawn(`SerialDMX.exe`, [EnttecOpenDMX.VENDOR_ID.toString(16), EnttecOpenDMX.PRODUCT_ID.toString(16), `${this._maxAddr}`]);
         this._serialProc.on('error', err => console.error(`SerialDMX process error: ${err}`));
         this._serialProc.stderr.on('data', err => console.error(`SerialDMX process error: ${err}`));
-        this._serialProc.stdout.on('data', data => console.log(`SerialDMX: ${data}`));
+        this._serialProc.stdout.on('data', data => Log.info(`SerialDMX: ${data}`));
     }
 
     public close(): void {

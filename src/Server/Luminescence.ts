@@ -4,7 +4,6 @@ import { getOrThrow } from 'Common/Networking/Payloads/Payload';
 import Config from './Config/Config';
 
 import * as usb from 'usb';
-import uDMX from './DMX/Adapters/uDMX';
 import DMXAdapter from './DMX/Adapters/DMXAdapter';
 import EnttecOpenDMX from './DMX/Adapters/EnttecOpenDMX';
 import FileSync from './Persistent/FileSync';
@@ -17,6 +16,7 @@ import {
     SetParkPayload
 } from 'Common/Networking/Payloads/Client';
 import { FixtureUtils } from '../Common/Fixtures/FixtureUtils';
+import { Log } from './Logging';
 
 export default class Luminescence {
 
@@ -26,7 +26,7 @@ export default class Luminescence {
     private _data: BoardData;
 
     private readonly DMX_ADAPTERS = [
-        EnttecOpenDMX, uDMX
+        EnttecOpenDMX
     ];
 
     public constructor() {
@@ -138,7 +138,7 @@ export default class Luminescence {
                         break;
                     }
                     default:
-                        console.log(`Unknown channel action: ${req.params.action}`);
+                        Log.warn(`Unknown channel action: ${req.params.action}`);
                         res.status(400).send({ error: 'Unknown action.' });
                         return;
                 }
@@ -164,7 +164,7 @@ export default class Luminescence {
         for (const Adapter of this.DMX_ADAPTERS) {
             const device = usb.findByIds(Adapter.VENDOR_ID, Adapter.PRODUCT_ID);
             if (device) {
-                console.log(`Adapter found: ${Adapter.NAME}`);
+                Log.info(`Adapter found: ${Adapter.NAME}`);
                 this.setAdapter(new Adapter(device));
                 break;
             }
@@ -180,12 +180,12 @@ export default class Luminescence {
             for (const Adapter of this.DMX_ADAPTERS) {
                 if (device.deviceDescriptor.idVendor == Adapter.VENDOR_ID
                     && device.deviceDescriptor.idProduct == Adapter.PRODUCT_ID) {
-                    console.log(`Adapter found: ${Adapter.NAME}`);
+                    Log.info(`Adapter found: ${Adapter.NAME}`);
                     this.setAdapter(new Adapter(device));
                     return;
                 }
             }
-            console.log('USB attached. Not recognized as a DMX adapter.');
+            Log.info('USB attached. Not recognized as a DMX adapter.');
         });
 
         usb.on('detach', (device) => {

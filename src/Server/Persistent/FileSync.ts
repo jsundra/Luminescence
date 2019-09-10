@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { BoardData } from 'Common/BoardData';
 import PersistentBoardData from './SaveFormat';
+import { Log } from '../Logging';
 
 // TODO: Make this dynamically detect changes & save
 
@@ -13,7 +14,7 @@ export default class FileSync {
 
     public loadFromDisk(src: string): BoardData {
 
-        console.log(`Loading BoardData from disk: ${src}`);
+        Log.info(`Loading BoardData from disk: ${src}`);
         try {
             this._saveData.setFromJSON(JSON.parse(fs.readFileSync(src, 'utf8')));
         } catch(e) {
@@ -33,7 +34,7 @@ export default class FileSync {
             setTimeout(() => {
                 this._writePending = false;
 
-                console.log(`Saving BoardData to disk: ${src}`);
+                Log.info(`Saving BoardData to disk: ${src}`);
 
                 function logError(err: Error) {
                     console.error(`Error saving BoardData to disk!
