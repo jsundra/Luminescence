@@ -16,6 +16,7 @@ import {
     SetParkPayload
 } from 'Common/Networking/Payloads/Client';
 import { DataUpdate } from '../Common/Networking/Payloads/Server';
+import { Copy } from '../Common/Util/Copy';
 
 export module API {
 	export function Status(): Promise<any> {
@@ -23,7 +24,16 @@ export module API {
 	}
 
 	export function GetBoardData(): Promise<BoardData> {
-		return HTTP.Get('/api/data');
+		const promise = HTTP.Get('/api/data');
+		return new Promise<BoardData>((resolve, reject) => {
+			console.log('hmm');
+			promise.then((data: any) => {
+				const boardData: BoardData = Copy.deep(data, new BoardData());
+				resolve(boardData);
+			});
+
+			promise.catch(reject);
+		});
 	}
 
 	export function SetControl(control: string, value: number): Promise<DataUpdate> {

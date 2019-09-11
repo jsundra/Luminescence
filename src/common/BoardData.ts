@@ -1,10 +1,12 @@
 import { FixtureDescriptor, FixtureDisplays, FixtureModeMap, FixtureModes } from 'Common/Fixtures/Types';
 import { ColorUtil } from "../Client/Util/ColorUtil";
 import RGB = ColorUtil.RGB;
+import { IInflatable } from 'Common/ISerializeable';
+import { Copy } from 'Common/Util/Copy';
 
 type ChangeHandler = () => void;
 
-export class BoardData {
+export class BoardData implements IInflatable<BoardData> {
 
     public readonly output: OutputData = new OutputData(0);
     public readonly controls: ControlData = new ControlData();
@@ -41,6 +43,10 @@ export class BoardData {
             handler();
         }
     }
+
+    public inflate(data: BoardData): void {
+        this.channels.inflate(data.channels);
+    }
 }
 
 export enum DimmerOwnership {
@@ -67,14 +73,20 @@ export class DimmerData {
     public names: string[] = [];
 }
 
-export class ChannelData {
+export class ChannelData implements IInflatable<ChannelData> {
     // public values: number[] = [];
     public fixtures: {[index: number]: Fixture} = {};
     public values: number[] = [];
+
+    public inflate(data: ChannelData): void {
+        for (var index in data.fixtures) {
+            this.fixtures[index] = Copy.inflate(Fixture, data.fixtures[index]);
+        }
+    }
 }
 
 export class Fixture {
-    public readonly descriptor: FixtureDescriptor;
+    public descriptor: FixtureDescriptor;
 
     public stride: number;
     public mode: FixtureModes;
@@ -83,13 +95,13 @@ export class Fixture {
     // @ts-ignore
     public data: {[key: FixtureDisplays]: number};
 
-    constructor(descriptor: FixtureDescriptor, stride: number) {
-        this.descriptor = descriptor;
-        this.stride = stride;
+    constructor() {
+
     }
 
-    public loadData(data: Dict<any>): void {
-
+    public setConstants(descriptor: FixtureDescriptor, stride: number): void {
+        this.descriptor = descriptor;
+        this.stride = stride;
     }
 
     public computeIntensities(): number[] {
@@ -97,7 +109,9 @@ export class Fixture {
 
         let index = 0;
         const controls: FixtureDisplays[] = this.descriptor.components[this.mode];
-        for (const type of controls) {
+        for (const key of Object.keys(controls)) {
+            // @ts-ignore
+            const type = controls[key];
             switch (type) {
                 case ' ':
                 case 'A':
