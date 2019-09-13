@@ -27,7 +27,8 @@ export module FixtureUtils {
     }
 
     export function createFromDescriptor(desc: FixtureDescriptor, data?: Dict<any>): Fixture {
-        const fixture = new Fixture(desc, getStride(desc.name));
+        const fixture = new Fixture();
+        fixture.setConstants(desc, getStride(desc.name));
 
         fixture.mode = desc.modes[0];
         if (data) fixture.loadData(data);

@@ -1,6 +1,9 @@
 import { BoardData, DimmerOwnership } from 'Common/BoardData';
 import { FixtureUtils } from '../../Common/Fixtures/FixtureUtils';
 
+type MetaSave = {
+    saveFormat: number;
+}
 
 type DimmerSave = {
     [address: number]: {
@@ -19,11 +22,16 @@ type ChannelSave = {
 }
 
 export interface IPersistentBoardData {
+    meta: MetaSave;
     dimmers: DimmerSave;
     channels: ChannelSave;
 }
 
 export default class PersistentBoardData implements IPersistentBoardData {
+
+    public readonly meta: MetaSave = {
+        saveFormat: 1
+    };
 
     public readonly dimmers: DimmerSave = <any>{};
     public readonly channels: ChannelSave = <any>{};
@@ -32,6 +40,13 @@ export default class PersistentBoardData implements IPersistentBoardData {
         for (const key in data) {
             // @ts-ignore
             this[key] = data[key];
+        }
+
+        if (!data.meta || data.meta.version === undefined) {
+            // @ts-ignore
+            this.meta = {
+                saveFormat: 0
+            };
         }
     }
 
@@ -48,6 +63,7 @@ export default class PersistentBoardData implements IPersistentBoardData {
         for (const addr in data.channels.fixtures) {
             const fixture = data.channels.fixtures[addr];
             const addrNum = Number.parseInt(addr);
+
             this.channels[addr] = {
                 type: fixture.descriptor.name,
                 alias: fixture.alias,
@@ -75,6 +91,13 @@ export default class PersistentBoardData implements IPersistentBoardData {
         for (const i in this.channels) {
             const iNum = Number.parseInt(i);
             const data = this.channels[i];
+
+            switch (this.meta.saveFormat) {
+                case 0: {
+
+                }
+            }
+
             const fixture = FixtureUtils.createFromDescriptor(FixtureUtils.descriptorFromName(data.type));
 
             fixture.alias = data.alias;

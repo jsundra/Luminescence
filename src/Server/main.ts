@@ -55,7 +55,10 @@ async function init() {
         }
     });
 
-    server.listen(3000, '0.0.0.0', () => Log.always('Server started. Listening on port 3000.'));
+    server.listen(3000, '0.0.0.0', () => {
+        // @ts-ignore
+        return Log.always('Server started. Listening on port 3000.');
+    });
 }
 
 init();

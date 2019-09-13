@@ -99,6 +99,7 @@ export class Fixture {
 
     }
 
+    // TODO: Create "constant" type
     public setConstants(descriptor: FixtureDescriptor, stride: number): void {
         this.descriptor = descriptor;
         this.stride = stride;
